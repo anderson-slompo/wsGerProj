@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/xampp/htdocs/wsGerProj/http/StatusCodes.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/http/routes/admin.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/config/Settings.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/http/PostResponseVO.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/http/PostResponse.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/controllers/admin/ClienteController.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/models/Cliente.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/app.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/public/index.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/controllers/RestController.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/config/loader.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/config/config.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/http/DefaultParams.php</file>
+            <file>file:/C:/xampp/htdocs/wsGerProj/http/GetResponse.php</file>
+        </group>
+    </open-files>
+</project-private>
