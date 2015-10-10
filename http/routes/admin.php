@@ -8,9 +8,9 @@ $clientes = new MicroCollection();
 $clientes->setHandler(new A\ClienteController());
 $clientes->setPrefix('/clientes');
 $clientes->get('/', 'index');
-$clientes->get('/{id}', 'index');
+$clientes->get('/{id}', 'show');
 $clientes->post('/', 'create');
-$clientes->put('/', 'update');
+$clientes->put('/{id}', 'update');
 $clientes->delete('/', 'delete');
 
 $app->mount($clientes);

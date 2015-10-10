@@ -8,6 +8,7 @@ use Phalcon\Mvc\Controller;
 use wsGerProj\Http\GetResponse;
 use wsGerProj\Http\DefaultParams;
 use wsGerProj\Http\PostResponse;
+use wsGerProj\Http\StatusCodes;
 
 class ClienteController extends Controller implements RestController {
 
@@ -37,25 +38,53 @@ class ClienteController extends Controller implements RestController {
         return GetResponse::createResponse($this->request, $query->execute()->toArray());
     }
 
+    public function show($id) {
+        $cliente = Cliente::findFirst($id);
+
+        if ($cliente) {
+            return $cliente->toArray();
+        } else {
+            throw new \Exception("Cliente #{$id} não encontrado", StatusCodes::NAO_ENCONTRADO);
+        }
+    }
+
     public function create() {
 
         $cliente = new Cliente;
         $cliente->setNome($this->request->getPost('nome'));
         $cliente->setIdExterno($this->request->getPost('id_externo'));
 
-        if ($cliente->save()) {
+        if ($cliente->validation() && $cliente->save()) {
             return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente criado com sucesso");
         } else {
             $except = '';
             foreach ($cliente->getMessages() as $message) {
-                $except.= $message. "\n";
+                $except.= $message . "/";
             }
             throw new \Exception($except);
         }
     }
 
-    public function update() {
-        throw new \Exception("Error Processing update Request", 1);
+    public function update($id) {
+        $cliente = Cliente::findFirst($id);
+
+        if ($cliente) {
+
+            $cliente->setNome($this->request->getPost('nome'));
+            $cliente->setIdExterno($this->request->getPost('id_externo'));
+
+            if ($cliente->validation() && $cliente->save()) {
+                return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente atualizado com sucesso");
+            } else {
+                $except = '';
+                foreach ($cliente->getMessages() as $message) {
+                    $except.= $message . "/";
+                }
+                throw new \Exception($except, StatusCodes::ERRO_CLI);
+            }
+        } else {
+            throw new \Exception("Cliente #{$id} não encontrado", StatusCodes::NAO_ENCONTRADO);
+        }
     }
 
     public function delete() {

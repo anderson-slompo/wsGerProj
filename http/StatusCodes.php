@@ -8,5 +8,6 @@ final class StatusCodes {
     const CRIADO = 201;
     const ERRO_CLI = 400;
     const NAO_AUTORIZADO = 401;
+    const NAO_ENCONTRADO = 404;
 
 }

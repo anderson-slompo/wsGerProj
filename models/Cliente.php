@@ -125,13 +125,17 @@ class Cliente extends \Phalcon\Mvc\Model {
     }
 
     public function validation() {
-        $this->validate(new Uniqueness([
-            "field" => "id_externo",
-            "message" => "O campo Id Externo não pode se repetir!"
-        ]));
         $this->validate(new PresenceOf([
             "field" => "nome",
             "message" => "O nome do cliente é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "id_externo",
+            "message" => "O campo id_externo é obrigatório!"
+        ]));
+        $this->validate(new Uniqueness([
+            "field" => "id_externo",
+            "message" => "O campo Id Externo não pode se repetir!"
         ]));
         
         return !$this->validationHasFailed();
