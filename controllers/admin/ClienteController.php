@@ -87,8 +87,23 @@ class ClienteController extends Controller implements RestController {
         }
     }
 
-    public function delete() {
-        throw new \Exception("Error Processing delete Request", 1);
+    public function delete($id) {
+        $cliente = Cliente::findFirst($id);
+
+        if ($cliente) {
+
+            if ($cliente->delete()) {
+                return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente removido com sucesso");
+            } else {
+                $except = '';
+                foreach ($cliente->getMessages() as $message) {
+                    $except.= $message . "/";
+                }
+                throw new \Exception($except, StatusCodes::ERRO_CLI);
+            }
+        } else {
+            throw new \Exception("Cliente #{$id} não encontrado", StatusCodes::NAO_ENCONTRADO);
+        }
     }
 
 }

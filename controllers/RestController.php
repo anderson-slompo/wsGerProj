@@ -12,5 +12,5 @@ interface RestController {
 
     public function update($id);
 
-    public function delete();
+    public function delete($id);
 }

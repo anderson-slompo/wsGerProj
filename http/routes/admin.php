@@ -11,7 +11,7 @@ $clientes->get('/', 'index');
 $clientes->get('/{id}', 'show');
 $clientes->post('/', 'create');
 $clientes->put('/{id}', 'update');
-$clientes->delete('/', 'delete');
+$clientes->delete('/{id}', 'delete');
 
 $app->mount($clientes);
 
