@@ -51,10 +51,8 @@ class ClienteController extends Controller implements RestController {
 
     public function create() {
 
-        $cliente = new Cliente;
-        $cliente->setNome($this->request->getPost('nome'));
-        $cliente->setIdExterno($this->request->getPost('id_externo'));
-
+        $cliente = $this->createClienteFromJsonRawData();
+        
         if ($cliente->validation() && $cliente->save()) {
             return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente criado com sucesso");
         } else {
@@ -107,4 +105,20 @@ class ClienteController extends Controller implements RestController {
         }
     }
 
+    /**
+     * Cria objeto do cliente com base nos dados enviados por POST via JSON
+     * 
+     * @return Cliente
+     */
+    private function createClienteFromJsonRawData(){
+        
+        $dataPost = $this->request->getJsonRawBody();
+        
+        $cliente = new Cliente;
+        $cliente->setNome($dataPost->nome);
+        $cliente->setIdExterno($dataPost->id_externo);
+        
+        return $cliente;
+    }
+    
 }
