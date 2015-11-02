@@ -6,7 +6,7 @@ use wsGerProj\Controllers\Admin as A;
 $clientes = new MicroCollection();
 
 $clientes->setHandler(new A\ClienteController());
-$clientes->setPrefix('/clientes');
+$clientes->setPrefix('/admin/clientes');
 $clientes->get('/', 'index');
 $clientes->get('/{id}', 'show');
 $clientes->post('/', 'create');

@@ -12,6 +12,6 @@ final class Settings {
     /**
      * Qtd de registros por página
      */
-    const RECORDS = 20;
+    const RECORDS = 5;
     
 }

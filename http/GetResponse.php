@@ -148,7 +148,7 @@ class GetResponse {
         $formated = http_build_query($params);
         $uri = $this->request->getURI();
         
-        return "{$parsed['path']}?{$formated}";
+        return WS_HOST."{$parsed['path']}?{$formated}";
     }
     
     /**

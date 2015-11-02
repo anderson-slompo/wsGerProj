@@ -15,18 +15,19 @@ class ClienteController extends Controller implements RestController {
     public function index() {
         $query = Cliente::query();
 
-        if ($this->request->getQuery('id')) {
-            $query->andWhere('id = :id:')->bind(['id' => $this->request->getQuery('id')]);
+        if ($this->request->getQuery('search_id')) {
+            $query->andWhere('id = :id:')->bind(['id' => $this->request->getQuery('search_id')]);
         } else {
             $binds = [];
-            if ($this->request->getQuery('nome')) {
-                $query->andWhere('nome LIKE :nome:');
-                $binds['nome'] = $this->request->getQuery('nome');
+            if ($this->request->getQuery('search_nome')) {
+                $query->andWhere('nome ILIKE :nome:');
+                $binds['nome'] = "%{$this->request->getQuery('search_nome')}%";
             }
-            if ($this->request->getQuery('id_externo')) {
+            if ($this->request->getQuery('search_id_externo')) {
                 $query->andWhere('id_externo = :id_externo:');
-                $binds['id_externo'] = $this->request->getQuery('id_externo');
+                $binds['id_externo'] = $this->request->getQuery('search_id_externo');
             }
+            
             if (count($binds)) {
                 $query->bind($binds);
             }
