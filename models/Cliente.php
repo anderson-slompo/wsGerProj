@@ -3,7 +3,9 @@
 namespace wsGerProj\Models;
 
 use Phalcon\Mvc\Model\Validator\Uniqueness,
-    Phalcon\Mvc\Model\Validator\PresenceOf;
+    Phalcon\Mvc\Model\Validator\PresenceOf,
+    Phalcon\Mvc\Model\Validator\Numericality;
+
 class Cliente extends \Phalcon\Mvc\Model {
 
     /**
@@ -133,11 +135,19 @@ class Cliente extends \Phalcon\Mvc\Model {
             "field" => "id_externo",
             "message" => "O campo id_externo é obrigatório!"
         ]));
+        $this->validate(new Numericality([
+            "field" => "id_externo",
+            "message" => "O campo id_externo deve ser numérico!"
+        ]));
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
         $this->validate(new Uniqueness([
             "field" => "id_externo",
             "message" => "O campo Id Externo não pode se repetir!"
         ]));
-        
+
+
         return !$this->validationHasFailed();
     }
 

@@ -26,6 +26,9 @@ $app->error(function ($exception) {
     $response = new Response();
     $response->setContentType('application/json', 'UTF-8');
     $response->setStatusCode($exception->getCode());
+    $response->setHeader("Access-Control-Allow-Origin", "*");
+    $response->setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+    $response->setHeader("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type");
     $response->setJsonContent(['error' => $exception->getMessage()]);
     $response->send();
     return false;

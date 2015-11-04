@@ -4,13 +4,13 @@ namespace wsGerProj\Controllers\Admin;
 
 use wsGerProj\Controllers\RestController;
 use wsGerProj\Models\Cliente;
-use Phalcon\Mvc\Controller;
+use wsGerProj\Controllers\ControllerBase;
 use wsGerProj\Http\GetResponse;
 use wsGerProj\Http\DefaultParams;
 use wsGerProj\Http\PostResponse;
 use wsGerProj\Http\StatusCodes;
 
-class ClienteController extends Controller implements RestController {
+class ClienteController extends ControllerBase implements RestController {
 
     public function index() {
         $query = Cliente::query();
@@ -52,34 +52,27 @@ class ClienteController extends Controller implements RestController {
     public function create() {
 
         $cliente = $this->createClienteFromJsonRawData();
-        
+               
         if ($cliente->validation() && $cliente->save()) {
-            return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente criado com sucesso");
+            return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente [#{$cliente->getId()} {$cliente->getNome()}] inserido com sucesso.");
         } else {
-            $except = '';
-            foreach ($cliente->getMessages() as $message) {
-                $except.= $message . "/";
-            }
-            throw new \Exception($except);
+            throw new \Exception(PostResponse::createModelErrorMessages($cliente), StatusCodes::ERRO_CLI);
         }
     }
 
     public function update($id) {
+        $dataPost = $this->request->getJsonRawBody();
         $cliente = Cliente::findFirst($id);
 
         if ($cliente) {
 
-            $cliente->setNome($this->request->getPost('nome'));
-            $cliente->setIdExterno($this->request->getPost('id_externo'));
+            $cliente->setNome($dataPost->nome);
+            $cliente->setIdExterno($dataPost->id_externo);
 
             if ($cliente->validation() && $cliente->save()) {
-                return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente atualizado com sucesso");
-            } else {
-                $except = '';
-                foreach ($cliente->getMessages() as $message) {
-                    $except.= $message . "/";
-                }
-                throw new \Exception($except, StatusCodes::ERRO_CLI);
+                return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente [#{$cliente->getId()} {$cliente->getNome()}] atualizado com sucesso.");
+            } else {                
+                throw new \Exception(PostResponse::createModelErrorMessages($cliente), StatusCodes::ERRO_CLI_CONFLICT);
             }
         } else {
             throw new \Exception("Cliente #{$id} não encontrado", StatusCodes::NAO_ENCONTRADO);
@@ -94,11 +87,7 @@ class ClienteController extends Controller implements RestController {
             if ($cliente->delete()) {
                 return PostResponse::createResponse(PostResponse::STATUS_OK, "Cliente removido com sucesso");
             } else {
-                $except = '';
-                foreach ($cliente->getMessages() as $message) {
-                    $except.= $message . "/";
-                }
-                throw new \Exception($except, StatusCodes::ERRO_CLI);
+                throw new \Exception(PostResponse::createModelErrorMessages($cliente), StatusCodes::ERRO_CLI_CONFLICT);
             }
         } else {
             throw new \Exception("Cliente #{$id} não encontrado", StatusCodes::NAO_ENCONTRADO);
