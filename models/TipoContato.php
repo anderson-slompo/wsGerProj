@@ -70,7 +70,6 @@ class TipoContato extends \Phalcon\Mvc\Model
     {
         $this->setSchema("public");
         $this->hasMany('id', 'wsGerProj\Models\FuncionarioContatos', 'id_tipo_contato', array('alias' => 'FuncionarioContatos'));
-        $this->hasMany('id', 'wsGerProj\Models\FuncionarioContatos', 'id_tipo_contato', NULL);
     }
 
     /**

@@ -70,7 +70,6 @@ class TipoEndereco extends \Phalcon\Mvc\Model
     {
         $this->setSchema("public");
         $this->hasMany('id', 'wsGerProj\Models\FuncionarioEnderecos', 'id_tipo_endereco', array('alias' => 'FuncionarioEnderecos'));
-        $this->hasMany('id', 'wsGerProj\Models\FuncionarioEnderecos', 'id_tipo_endereco', NULL);
     }
 
     /**

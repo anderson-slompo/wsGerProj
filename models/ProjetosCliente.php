@@ -69,8 +69,6 @@ class ProjetosCliente extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->setSchema("public");
-        $this->belongsTo('id_projeto', 'wsGerProj\Models\Projeto', 'id', array('alias' => 'Projeto'));
-        $this->belongsTo('id_cliente', 'wsGerProj\Models\Cliente', 'id', array('alias' => 'Cliente'));
         $this->belongsTo('id_projeto', 'wsGerProj\Models\Projeto', 'id', array('foreignKey' => true,'alias' => 'Projeto'));
         $this->belongsTo('id_cliente', 'wsGerProj\Models\Cliente', 'id', array('foreignKey' => true,'alias' => 'Cliente'));
     }

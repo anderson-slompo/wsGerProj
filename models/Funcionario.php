@@ -220,12 +220,6 @@ class Funcionario extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'wsGerProj\Models\ProjetoFuncionarios', 'id_funcionario', array('alias' => 'ProjetoFuncionarios'));
         $this->hasMany('id', 'wsGerProj\Models\TarefaAtribuicao', 'id_funcionario', array('alias' => 'TarefaAtribuicao'));
         $this->hasMany('id', 'wsGerProj\Models\TarefaInteracao', 'id_funcionario', array('alias' => 'TarefaInteracao'));
-        $this->hasMany('id', 'wsGerProj\Models\DepartamentosFuncionario', 'id_funcionario', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\FuncionarioContatos', 'id_funcionario', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\FuncionarioEnderecos', 'id_funcionario', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\ProjetoFuncionarios', 'id_funcionario', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\TarefaAtribuicao', 'id_funcionario', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\TarefaInteracao', 'id_funcionario', NULL);
     }
 
     /**

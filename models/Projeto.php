@@ -103,11 +103,6 @@ class Projeto extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'wsGerProj\Models\ProjetoFuncionarios', 'id_projeto', array('alias' => 'ProjetoFuncionarios'));
         $this->hasMany('id', 'wsGerProj\Models\ProjetosCliente', 'id_projeto', array('alias' => 'ProjetosCliente'));
         $this->hasMany('id', 'wsGerProj\Models\Tarefa', 'id_projeto', array('alias' => 'Tarefa'));
-        $this->hasMany('id', 'wsGerProj\Models\Erro', 'id_projeto', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\ProjetoAnexos', 'id_projeto', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\ProjetoFuncionarios', 'id_projeto', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\ProjetosCliente', 'id_projeto', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\Tarefa', 'id_projeto', NULL);
     }
 
     /**
