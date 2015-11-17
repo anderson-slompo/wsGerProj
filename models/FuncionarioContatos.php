@@ -2,8 +2,7 @@
 
 namespace wsGerProj\Models;
 
-class FuncionarioContatos extends \Phalcon\Mvc\Model
-{
+class FuncionarioContatos extends \Phalcon\Mvc\Model {
 
     /**
      *
@@ -29,8 +28,7 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      * @param integer $id_funcionario
      * @return $this
      */
-    public function setIdFuncionario($id_funcionario)
-    {
+    public function setIdFuncionario($id_funcionario) {
         $this->id_funcionario = $id_funcionario;
 
         return $this;
@@ -42,8 +40,7 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      * @param integer $id_tipo_contato
      * @return $this
      */
-    public function setIdTipoContato($id_tipo_contato)
-    {
+    public function setIdTipoContato($id_tipo_contato) {
         $this->id_tipo_contato = $id_tipo_contato;
 
         return $this;
@@ -55,8 +52,7 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      * @param string $contato
      * @return $this
      */
-    public function setContato($contato)
-    {
+    public function setContato($contato) {
         $this->contato = $contato;
 
         return $this;
@@ -67,8 +63,7 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getIdFuncionario()
-    {
+    public function getIdFuncionario() {
         return $this->id_funcionario;
     }
 
@@ -77,8 +72,7 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getIdTipoContato()
-    {
+    public function getIdTipoContato() {
         return $this->id_tipo_contato;
     }
 
@@ -87,21 +81,18 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getContato()
-    {
+    public function getContato() {
         return $this->contato;
     }
 
     /**
      * Initialize method for model.
      */
-    public function initialize()
-    {
+    public function initialize() {
         $this->setSchema("public");
         $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('alias' => 'Funcionario'));
         $this->belongsTo('id_tipo_contato', 'wsGerProj\Models\TipoContato', 'id', array('alias' => 'TipoContato'));
-        $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('foreignKey' => true,'alias' => 'Funcionario'));
-        $this->belongsTo('id_tipo_contato', 'wsGerProj\Models\Tipocontato', 'id', array('foreignKey' => true,'alias' => 'Tipocontato'));
+        
     }
 
     /**
@@ -109,8 +100,7 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getSource()
-    {
+    public function getSource() {
         return 'funcionario_contatos';
     }
 
@@ -120,8 +110,7 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      * @param mixed $parameters
      * @return FuncionarioContatos[]
      */
-    public static function find($parameters = null)
-    {
+    public static function find($parameters = null) {
         return parent::find($parameters);
     }
 
@@ -131,9 +120,10 @@ class FuncionarioContatos extends \Phalcon\Mvc\Model
      * @param mixed $parameters
      * @return FuncionarioContatos
      */
-    public static function findFirst($parameters = null)
-    {
+    public static function findFirst($parameters = null) {
         return parent::findFirst($parameters);
     }
+
+    
 
 }

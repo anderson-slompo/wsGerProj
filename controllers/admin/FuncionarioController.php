@@ -29,7 +29,7 @@ class FuncionarioController extends ControllerBase implements RestController {
 
     public function index() {
         $query = Funcionario::query();
-        
+
         if ($this->request->getQuery('search_id')) {
             $query->andWhere('id = :id:')->bind(['id' => $this->request->getQuery('search_id')]);
         } else {
@@ -42,7 +42,7 @@ class FuncionarioController extends ControllerBase implements RestController {
                 $query->andWhere('status = :status:');
                 $binds['status'] = $this->request->getQuery('search_status');
             }
-            
+
             if (count($binds)) {
                 $query->bind($binds);
             }
@@ -50,7 +50,7 @@ class FuncionarioController extends ControllerBase implements RestController {
         if ($this->request->getQuery(DefaultParams::ORDER)) {
             $query->order($this->request->getQuery(DefaultParams::ORDER));
         }
-        
+
         return GetResponse::createResponse($this->request, $query->execute()->toArray());
     }
 
@@ -59,17 +59,18 @@ class FuncionarioController extends ControllerBase implements RestController {
         if ($functionario) {
 
             $functionarioRet = $functionario->toArray();
-            $functionarioRet['contatos'] = $functionario->getFuncionarioContatos()->toArray();
-            $functionarioRet['enderecos'] = $functionario->getFuncionarioEnderecos()->toArray();
-            $functionarioRet['departamentos'] = $functionario->getDepartamentosFuncionario()->toArray();
-            $functionarioRet['projetos'] = $functionario->getProjetoFuncionarios()->toArray();
+            
+            $functionarioRet['contatos'] = $functionario->getContatos()->toArray();
+            $functionarioRet['enderecos'] = $functionario->getEnderecos()->toArray();
+            $functionarioRet['departamentos'] = $functionario->getDepartamentos()->toArray();
+            $functionarioRet['projetos'] = $functionario->getProjetos()->toArray();
 
             return $functionarioRet;
         } else {
             throw new \Exception("Funcionário #{$id} não encontrado", StatusCodes::NAO_ENCONTRADO);
         }
     }
-
+    
     public function update($id) {
         
     }

@@ -69,8 +69,6 @@ class DepartamentosFuncionario extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->setSchema("public");
-        $this->belongsTo('id_departamento', 'wsGerProj\Models\Departamento', 'id', array('alias' => 'Departamento'));
-        $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('alias' => 'Funcionario'));
         $this->belongsTo('id_departamento', 'wsGerProj\Models\Departamento', 'id', array('foreignKey' => true,'alias' => 'Departamento'));
         $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('foreignKey' => true,'alias' => 'Funcionario'));
     }

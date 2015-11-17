@@ -48,3 +48,16 @@ $tipoContato->get('/', 'index');
 $tipoContato->get('/{id}', 'show');
 
 $app->mount($tipoContato);
+
+/*******************************************************/
+$depFuncionarios = new MicroCollection();
+
+$depFuncionarios->setHandler(new A\DepartamentoFuncionarioController());
+$depFuncionarios->setPrefix('/admin/departamento_funcionarios');
+$depFuncionarios->get('/', 'index');
+$depFuncionarios->get('/{id}', 'show');
+$depFuncionarios->post('/', 'create');
+$depFuncionarios->put('/{id}', 'update');
+$depFuncionarios->delete('/{id}', 'delete');
+
+$app->mount($depFuncionarios);

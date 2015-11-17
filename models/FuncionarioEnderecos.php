@@ -100,8 +100,6 @@ class FuncionarioEnderecos extends \Phalcon\Mvc\Model
         $this->setSchema("public");
         $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('alias' => 'Funcionario'));
         $this->belongsTo('id_tipo_endereco', 'wsGerProj\Models\TipoEndereco', 'id', array('alias' => 'TipoEndereco'));
-        $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('foreignKey' => true,'alias' => 'Funcionario'));
-        $this->belongsTo('id_tipo_endereco', 'wsGerProj\Models\Tipoendereco', 'id', array('foreignKey' => true,'alias' => 'Tipoendereco'));
     }
 
     /**

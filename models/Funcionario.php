@@ -254,4 +254,40 @@ class Funcionario extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public function getContatos(){
+        $query = FuncionarioContatos::query()
+                ->columns(['id_funcionario', 'id_tipo_contato', 'contato', 'descricao'])
+                ->join('wsGerProj\Models\TipoContato')
+                ->where('id_funcionario = :id_funcionario:')
+                ->bind(['id_funcionario'=> $this->getId()]);
+        
+        return $query->execute();
+    }
+    public function getEnderecos(){
+        $query = FuncionarioEnderecos::query()
+                ->columns(['id_funcionario', 'id_tipo_endereco', 'endereco  ','descricao'])
+                ->join('wsGerProj\Models\TipoEndereco')
+                ->where('id_funcionario = :id_funcionario:')
+                ->bind(['id_funcionario'=> $this->getId()]);
+        
+        return $query->execute();
+    }
+    public function getDepartamentos(){
+        $query = DepartamentosFuncionario::query()
+                ->columns(['id_funcionario', 'id_departamento', 'descricao'])
+                ->join('wsGerProj\Models\Departamento')
+                ->where('id_funcionario = :id_funcionario:')
+                ->bind(['id_funcionario'=> $this->getId()]);
+        
+        return $query->execute();
+    }
+    public function getProjetos(){
+        $query = ProjetoFuncionarios::query()
+                ->columns(['id_funcionario', 'id_projeto', 'nome'])
+                ->join('wsGerProj\Models\Projeto')
+                ->where('id_funcionario = :id_funcionario:')
+                ->bind(['id_funcionario'=> $this->getId()]);
+        
+        return $query->execute();
+    }
 }

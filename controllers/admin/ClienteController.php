@@ -26,8 +26,7 @@ class ClienteController extends ControllerBase implements RestController {
             if ($this->request->getQuery('search_id_externo')) {
                 $query->andWhere('id_externo = :id_externo:');
                 $binds['id_externo'] = $this->request->getQuery('search_id_externo');
-            }
-            
+            }            
             if (count($binds)) {
                 $query->bind($binds);
             }
