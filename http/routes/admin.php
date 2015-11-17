@@ -61,3 +61,26 @@ $depFuncionarios->put('/{id}', 'update');
 $depFuncionarios->delete('/{id}', 'delete');
 
 $app->mount($depFuncionarios);
+
+/*******************************************************/
+$projeto = new MicroCollection();
+
+$projeto->setHandler(new A\ProjetosController());
+$projeto->setPrefix('/admin/projetos');
+$projeto->get('/', 'index');
+$projeto->get('/{id}', 'show');
+$projeto->post('/', 'create');
+$projeto->put('/{id}', 'update');
+$projeto->delete('/{id}', 'delete');
+
+$app->mount($projeto);
+
+/*******************************************************/
+$departamento = new MicroCollection();
+
+$departamento->setHandler(new A\DepartamentosController());
+$departamento->setPrefix('/admin/departamentos');
+$departamento->get('/', 'index');
+$departamento->get('/{id}', 'show');
+
+$app->mount($departamento);

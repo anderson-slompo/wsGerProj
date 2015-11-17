@@ -136,5 +136,32 @@ class Projeto extends \Phalcon\Mvc\Model
     {
         return parent::findFirst($parameters);
     }
+    
+    public function getFuncionarios(){
+        $query = ProjetoFuncionarios::query()
+                ->columns(['id_funcionario as id', 'nome'])
+                ->join('wsGerProj\Models\Funcionario')
+                ->where('id_projeto = :id_projeto:')
+                ->bind(['id_projeto' => $this->getId()]);
+        return $query->execute();
+    }
+    
+    public function getClientes(){
+        $query = ProjetosCliente::query()
+                ->columns(['id_cliente as id', 'nome'])
+                ->join('wsGerProj\Models\Cliente')
+                ->where('id_projeto = :id_projeto:')
+                ->bind(['id_projeto' => $this->getId()]);
+        return $query->execute();
+    }
+    
+    public function getAnexos(){
+        $query = ProjetoAnexos::query()
+                ->columns(['id_anexo as id', 'nome', 'descricao', 'caminho','original'])
+                ->join('wsGerProj\Models\Anexo')
+                ->where('id_projeto = :id_projeto:')
+                ->bind(['id_projeto' => $this->getId()]);
+        return $query->execute();
+    }
 
 }

@@ -70,7 +70,6 @@ class Departamento extends \Phalcon\Mvc\Model
     {
         $this->setSchema("public");
         $this->hasMany('id', 'wsGerProj\Models\DepartamentosFuncionario', 'id_departamento', array('alias' => 'DepartamentosFuncionario'));
-        $this->hasMany('id', 'wsGerProj\Models\DepartamentosFuncionario', 'id_departamento', NULL);
     }
 
     /**
@@ -105,4 +104,13 @@ class Departamento extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public function getFuncionarios(){
+        $query = DepartamentosFuncionario::query()
+                ->columns(['id_departamento', 'id_funcionario', 'nome'])
+                ->join('wsGerProj\Models\Funcionario')
+                ->where('id_departamento = :id_departamento:')
+                ->bind(['id_departamento' => $this->getId()]);
+        return $query->execute();
+    }
+    
 }

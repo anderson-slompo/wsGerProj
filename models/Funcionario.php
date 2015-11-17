@@ -274,7 +274,7 @@ class Funcionario extends \Phalcon\Mvc\Model
     }
     public function getDepartamentos(){
         $query = DepartamentosFuncionario::query()
-                ->columns(['id_funcionario', 'id_departamento', 'descricao'])
+                ->columns(['id_departamento as id', 'descricao'])
                 ->join('wsGerProj\Models\Departamento')
                 ->where('id_funcionario = :id_funcionario:')
                 ->bind(['id_funcionario'=> $this->getId()]);
@@ -283,7 +283,7 @@ class Funcionario extends \Phalcon\Mvc\Model
     }
     public function getProjetos(){
         $query = ProjetoFuncionarios::query()
-                ->columns(['id_funcionario', 'id_projeto', 'nome'])
+                ->columns(['id_projeto as id', 'nome', 'descricao'])
                 ->join('wsGerProj\Models\Projeto')
                 ->where('id_funcionario = :id_funcionario:')
                 ->bind(['id_funcionario'=> $this->getId()]);
