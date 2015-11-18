@@ -2,6 +2,10 @@
 
 namespace wsGerProj\Models;
 
+use Phalcon\Mvc\Model\Validator\Uniqueness,
+    Phalcon\Mvc\Model\Validator\PresenceOf,
+    Phalcon\Mvc\Model\Validator\Numericality;
+
 class Funcionario extends \Phalcon\Mvc\Model
 {
 
@@ -289,5 +293,46 @@ class Funcionario extends \Phalcon\Mvc\Model
                 ->bind(['id_funcionario'=> $this->getId()]);
         
         return $query->execute();
+    }
+    
+    public function deleteRelated(){
+        $this->getFuncionarioContatos()->delete();
+        $this->getFuncionarioEnderecos()->delete();
+        $this->getDepartamentosFuncionario()->delete();
+        $this->getProjetoFuncionarios()->delete();
+    }
+    
+    public function validation() {
+        $this->validate(new PresenceOf([
+            "field" => "nome",
+            "message" => "O nome do funcionário é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "login",
+            "message" => "O campo usuário é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "senha",
+            "message" => "A senha do usuário é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "data_admissao",
+            "message" => "A data de adminissão do funcionário é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "status",
+            "message" => "O status de acesso ao sistema é obrigatório!"
+        ]));
+        
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+        $this->validate(new Uniqueness([
+            "field" => "login",
+            "message" => "Login escolhido já utilizado!"
+        ]));
+
+
+        return !$this->validationHasFailed();
     }
 }
