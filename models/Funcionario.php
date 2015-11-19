@@ -3,8 +3,7 @@
 namespace wsGerProj\Models;
 
 use Phalcon\Mvc\Model\Validator\Uniqueness,
-    Phalcon\Mvc\Model\Validator\PresenceOf,
-    Phalcon\Mvc\Model\Validator\Numericality;
+    Phalcon\Mvc\Model\Validator\PresenceOf;
 
 class Funcionario extends \Phalcon\Mvc\Model
 {

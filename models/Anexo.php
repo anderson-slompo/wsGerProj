@@ -2,6 +2,9 @@
 
 namespace wsGerProj\Models;
 
+use Phalcon\Mvc\Model\Validator\Uniqueness,
+    Phalcon\Mvc\Model\Validator\PresenceOf;
+
 class Anexo extends \Phalcon\Mvc\Model
 {
 
@@ -158,8 +161,6 @@ class Anexo extends \Phalcon\Mvc\Model
         $this->setSchema("public");
         $this->hasMany('id', 'wsGerProj\Models\ProjetoAnexos', 'id_anexo', array('alias' => 'ProjetoAnexos'));
         $this->hasMany('id', 'wsGerProj\Models\TarefaAnexos', 'id_anexo', array('alias' => 'TarefaAnexos'));
-        $this->hasMany('id', 'wsGerProj\Models\ProjetoAnexos', 'id_anexo', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\TarefaAnexos', 'id_anexo', NULL);
     }
 
     /**
@@ -194,4 +195,18 @@ class Anexo extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public function validation(){
+        $this->validate(new PresenceOf([
+            "field" => "nome",
+            "message" => "O nome do anexo é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "descricao",
+            "message" => "A descricao do anexo é obrigatória!"
+        ]));
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+    }
+    
 }

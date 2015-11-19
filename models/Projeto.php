@@ -2,6 +2,9 @@
 
 namespace wsGerProj\Models;
 
+use Phalcon\Mvc\Model\Validator\Uniqueness,
+    Phalcon\Mvc\Model\Validator\PresenceOf;
+
 class Projeto extends \Phalcon\Mvc\Model
 {
 
@@ -164,4 +167,29 @@ class Projeto extends \Phalcon\Mvc\Model
         return $query->execute();
     }
 
+    public function deleteRelated(){
+        $this->getProjetosCliente()->delete();
+        $this->getProjetoFuncionarios()->delete();
+    }
+    
+    public function validation(){
+        $this->validate(new PresenceOf([
+            "field" => "nome",
+            "message" => "O nome do projeto é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "descricao",
+            "message" => "A descricao do proejto é obrigatória!"
+        ]));
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+        $this->validate(new Uniqueness([
+            "field" => "nome",
+            "message" => "Nome do projeto escolhido já utilizado!"
+        ]));
+
+
+        return !$this->validationHasFailed();
+    }
 }

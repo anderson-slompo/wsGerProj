@@ -111,8 +111,9 @@ class FuncionarioController extends ControllerBase implements RestController {
     }
 
     /**
-     * Cria objeto do cliente com base nos dados enviados por POST via JSON
+     * Cria objeto do funcionario com base nos dados enviados por POST via JSON, caso seja passado o funcionario será considerado edição do mesmo
      * 
+     * @param Funcionario $funcionario
      * @return Funcionario
      */
     private function createFuncionarioFromJsonRawData(Funcionario $funcionario = NULL) {
