@@ -24,7 +24,8 @@ class ProjetosController extends ControllerBase implements RestController {
         $projeto = $this->createProjetoFromJsonRawData();
 
         if ($projeto->validation() && $projeto->save()) {
-            return PostResponse::createResponse(PostResponse::STATUS_OK, "Projeto [#{$projeto->getId()} {$projeto->getNome()}] inserido com sucesso.");
+            $id = $projeto->getId();
+            return PostResponse::createResponse(PostResponse::STATUS_OK, ['message'=>"Projeto [#{$id} {$projeto->getNome()}] inserido com sucesso.", 'id'=>$id]);
         } else {
             throw new \Exception(PostResponse::createModelErrorMessages($projeto), StatusCodes::ERRO_CLI);
         }
@@ -88,7 +89,7 @@ class ProjetosController extends ControllerBase implements RestController {
             $projeto = $this->createProjetoFromJsonRawData($projeto);
 
             if ($projeto->validation() && $projeto->save()) {
-                return PostResponse::createResponse(PostResponse::STATUS_OK, "Projeto [#{$projeto->getId()} {$projeto->getNome()}] inserido com sucesso.");
+                return PostResponse::createResponse(PostResponse::STATUS_OK, "Projeto [#{$projeto->getId()} {$projeto->getNome()}] alterado com sucesso.");
             } else {
                 throw new \Exception(PostResponse::createModelErrorMessages($projeto), StatusCodes::ERRO_CLI);
             }

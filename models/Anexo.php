@@ -207,6 +207,7 @@ class Anexo extends \Phalcon\Mvc\Model
         if (is_numeric($this->id)) {
             $this->_operationMade=2;
         }
+        return !$this->validationHasFailed();
     }
     
 }

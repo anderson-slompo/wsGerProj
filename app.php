@@ -8,6 +8,7 @@ use Phalcon\Http\Response;
 use wsGerProj\Http\StatusCodes;
 
 define('WS_HOST', 'http://localhost.wsGerProj');
+define('UPLOAD_PATH', '/var/www/html/wsGerProj/public/uploads/');
 
 require_once 'http/routes/admin.php';
 
@@ -35,8 +36,16 @@ $app->error(function ($exception) {
 });
 
 $app->after(function () use ($app) {
-    $response = new Response();
-    $response->setContentType('application/json', 'UTF-8');
-    $response->setJsonContent($app->getReturnedValue());
-    $response->send();
+    $return = $app->getReturnedValue();
+    
+    if( $return instanceof  Response){
+        $return->send();
+        
+    } else{        
+        $response = new Response();
+        $response->setContentType('application/json', 'UTF-8');
+        $response->setJsonContent($return);
+        $response->send();
+    }
+    
 });

@@ -84,3 +84,22 @@ $departamento->get('/', 'index');
 $departamento->get('/{id}', 'show');
 
 $app->mount($departamento);
+
+/*******************************************************/
+$projetoAnexos = new MicroCollection();
+
+$departamento->setHandler(new A\ProjetoAnexosController());
+$departamento->setPrefix('/admin/projeto_anexos');
+$departamento->post('/', 'create');
+$departamento->get('/{id}', 'show');
+$departamento->delete('/', 'delete');
+
+$app->mount($departamento);
+
+/*******************************************************/
+$download = new MicroCollection();
+$download->setHandler(new wsGerProj\Controllers\DownloadController());
+$download->setPrefix('/download');
+$download->get('/{id}','download');
+
+$app->mount($download);
