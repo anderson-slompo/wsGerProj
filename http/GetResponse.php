@@ -41,11 +41,11 @@ class GetResponse {
 
     /**
      * Total de registros
-     *
+     * $response->request
      * @var int 
      */
     private $count;
-    
+
     const WAY_NEXT = 1;
     const WAY_PREV = -1;
 
@@ -134,31 +134,35 @@ class GetResponse {
      * @param int|self::WAY_* $way
      * @return string
      */
-    private function getPageURL($way){
-        
+    private function getPageURL($way) {
+
         $parsed = parse_url($_SERVER['REQUEST_URI']);
-        if(isset($parsed['query'])){
+        if (isset($parsed['query'])) {
             parse_str($parsed['query'], $params);
             unset($params['_url']);
-        } else{
+        } else {
             $params = [];
         }
         $params[DefaultParams::PAGE] = $this->currentPage + $way;
-        
+
         $formated = http_build_query($params);
         $uri = $this->request->getURI();
-        
-        return WS_HOST."{$parsed['path']}?{$formated}";
+
+        return WS_HOST . "{$parsed['path']}?{$formated}";
     }
-    
+
     /**
      * Preenche os registros a serem exibidos na pagina solicitada
      * 
      * @return \wsGerProj\Http\GetResponse
      */
     private function setResults() {
-        $startRow = ($this->currentPage - 1)*Settings::RECORDS;
-        $this->retorno->results = array_slice($this->data, $startRow, Settings::RECORDS);
+        if ($this->request->getQuery(DefaultParams::SKIP_PAGINATION)) {            
+            $this->retorno->results = $this->data;
+        } else {
+            $startRow = ($this->currentPage - 1) * Settings::RECORDS;
+            $this->retorno->results = array_slice($this->data, $startRow, Settings::RECORDS);
+        }
         return $this;
     }
 

@@ -46,7 +46,7 @@ class ProjetosController extends ControllerBase implements RestController {
                 $binds['nome'] = "%{$this->request->getQuery('search_nome')}%";
             }
             if ($this->request->getQuery('search_descricao')) {
-                $query->andWhere('descricao ILKE :descricao:');
+                $query->andWhere('descricao ILIKE :descricao:');
                 $binds['descricao'] = "%{$this->request->getQuery('search_descricao')}%";
             }
 
