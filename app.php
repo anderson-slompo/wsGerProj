@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors', true);
+error_reporting(E_ALL);
+
 /**
  * Local variables
  * @var \Phalcon\Mvc\Micro $app
@@ -9,6 +12,17 @@ use wsGerProj\Http\StatusCodes;
 
 define('WS_HOST', 'http://localhost.wsGerProj');
 define('UPLOAD_PATH', '/var/www/html/wsGerProj/public/uploads/');
+
+
+function exception_error_handler($severity, $message, $file, $line) {
+    if (!(error_reporting() & $severity)) {
+        // This error code is not included in error_reporting
+        return;
+    }
+    
+    throw new \ErrorException($message, 500, $severity, $file, $line);
+}
+set_error_handler("exception_error_handler");
 
 require_once 'http/routes/admin.php';
 
@@ -24,6 +38,7 @@ require_once 'http/routes/admin.php';
 //});
 
 $app->error(function ($exception) {
+    
     $response = new Response();
     $response->setContentType('application/json', 'UTF-8');
     $response->setStatusCode($exception->getCode());

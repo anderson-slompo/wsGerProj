@@ -2,8 +2,10 @@
 
 namespace wsGerProj\Models;
 
-class Tarefa extends \Phalcon\Mvc\Model
-{
+use Phalcon\Mvc\Model\Validator\Uniqueness,
+    Phalcon\Mvc\Model\Validator\PresenceOf;
+
+class Tarefa extends \Phalcon\Mvc\Model {
 
     /**
      *
@@ -41,14 +43,43 @@ class Tarefa extends \Phalcon\Mvc\Model
      */
     protected $status;
 
+    const STATUS_NOVA = 1;
+    const STATUS_AGUARDANDO_DESENVOLVIMENTO = 2;
+    const STATUS_DESENVOLVIMENTO = 3;
+    const STATUS_AGUARDANTO_TESTE = 4;
+    const STATUS_TESTE = 5;
+    const STATUS_RETORNO_TESTE = 6;
+    const STATUS_AGUARDANDO_IMPLANTACAO = 7;
+    const STATUS_IMPLANTADA = 8;
+    const STATUS_CANCELADA = 0;
+
+    public static $statusDesc = [
+        self::STATUS_NOVA => 'Nova',
+        self::STATUS_AGUARDANDO_DESENVOLVIMENTO => 'Aguardando desenvolvimento',
+        self::STATUS_DESENVOLVIMENTO => 'Em desenvolvimento',
+        self::STATUS_AGUARDANTO_TESTE => 'Aguardando testes',
+        self::STATUS_TESTE => 'Em teste',
+        self::STATUS_RETORNO_TESTE => 'Retorno de teste',
+        self::STATUS_AGUARDANDO_IMPLANTACAO => 'Aguardando implantação',
+        self::STATUS_IMPLANTADA => 'Implantada',
+        self::STATUS_CANCELADA => 'Cancelada',
+    ];
+
+    const TIPO_NOVA = 1;
+    const TIPO_MELHORIA = 2;
+
+    public static $tipoDesc = [
+        self::TIPO_NOVA => 'Nova',
+        self::TIPO_MELHORIA => 'Melhoria'
+    ];
+
     /**
      * Method to set the value of field id
      *
      * @param integer $id
      * @return $this
      */
-    public function setId($id)
-    {
+    public function setId($id) {
         $this->id = $id;
 
         return $this;
@@ -60,8 +91,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      * @param integer $id_projeto
      * @return $this
      */
-    public function setIdProjeto($id_projeto)
-    {
+    public function setIdProjeto($id_projeto) {
         $this->id_projeto = $id_projeto;
 
         return $this;
@@ -73,8 +103,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      * @param string $nome
      * @return $this
      */
-    public function setNome($nome)
-    {
+    public function setNome($nome) {
         $this->nome = $nome;
 
         return $this;
@@ -86,8 +115,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      * @param string $descricao
      * @return $this
      */
-    public function setDescricao($descricao)
-    {
+    public function setDescricao($descricao) {
         $this->descricao = $descricao;
 
         return $this;
@@ -99,8 +127,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      * @param integer $tipo
      * @return $this
      */
-    public function setTipo($tipo)
-    {
+    public function setTipo($tipo) {
         $this->tipo = $tipo;
 
         return $this;
@@ -112,8 +139,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      * @param integer $status
      * @return $this
      */
-    public function setStatus($status)
-    {
+    public function setStatus($status) {
         $this->status = $status;
 
         return $this;
@@ -124,8 +150,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -134,8 +159,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getIdProjeto()
-    {
+    public function getIdProjeto() {
         return $this->id_projeto;
     }
 
@@ -144,8 +168,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getNome()
-    {
+    public function getNome() {
         return $this->nome;
     }
 
@@ -154,8 +177,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getDescricao()
-    {
+    public function getDescricao() {
         return $this->descricao;
     }
 
@@ -164,8 +186,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getTipo()
-    {
+    public function getTipo() {
         return $this->tipo;
     }
 
@@ -174,16 +195,14 @@ class Tarefa extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->status;
     }
 
     /**
      * Initialize method for model.
      */
-    public function initialize()
-    {
+    public function initialize() {
         $this->setSchema("public");
         $this->hasMany('id', 'wsGerProj\Models\Erro', 'id_tarefa', array('alias' => 'Erro'));
         $this->hasMany('id', 'wsGerProj\Models\ImplantacaoTarefas', 'id_tarefa', array('alias' => 'ImplantacaoTarefas'));
@@ -192,15 +211,7 @@ class Tarefa extends \Phalcon\Mvc\Model
         $this->hasMany('id', 'wsGerProj\Models\TarefaInteracao', 'id_tarefa', array('alias' => 'TarefaInteracao'));
         $this->hasMany('id', 'wsGerProj\Models\TarefaItens', 'id_tarefa', array('alias' => 'TarefaItens'));
         $this->hasMany('id', 'wsGerProj\Models\TarefaLog', 'id_tarefa', array('alias' => 'TarefaLog'));
-        $this->belongsTo('id_projeto', 'wsGerProj\Models\Projeto', 'id', array('alias' => 'Projeto'));
-        $this->hasMany('id', 'wsGerProj\Models\Erro', 'id_tarefa', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\ImplantacaoTarefas', 'id_tarefa', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\TarefaAnexos', 'id_tarefa', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\TarefaAtribuicao', 'id_tarefa', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\TarefaInteracao', 'id_tarefa', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\TarefaItens', 'id_tarefa', NULL);
-        $this->hasMany('id', 'wsGerProj\Models\TarefaLog', 'id_tarefa', NULL);
-        $this->belongsTo('id_projeto', 'wsGerProj\Models\Projeto', 'id', array('foreignKey' => true,'alias' => 'Projeto'));
+        $this->belongsTo('id_projeto', 'wsGerProj\Models\Projeto', 'id', array('foreignKey' => true, 'alias' => 'Projeto'));
     }
 
     /**
@@ -208,8 +219,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getSource()
-    {
+    public function getSource() {
         return 'tarefa';
     }
 
@@ -219,8 +229,7 @@ class Tarefa extends \Phalcon\Mvc\Model
      * @param mixed $parameters
      * @return Tarefa[]
      */
-    public static function find($parameters = null)
-    {
+    public static function find($parameters = null) {
         return parent::find($parameters);
     }
 
@@ -230,9 +239,54 @@ class Tarefa extends \Phalcon\Mvc\Model
      * @param mixed $parameters
      * @return Tarefa
      */
-    public static function findFirst($parameters = null)
-    {
+    public static function findFirst($parameters = null) {
         return parent::findFirst($parameters);
+    }
+    
+    public function getAnexos(){
+        $query = TarefaAnexos::query()
+                ->columns(['id_anexo as id', 'nome', 'descricao', 'caminho','original'])
+                ->join('wsGerProj\Models\Anexo')
+                ->where('id_tarefa = :id_tarefa:')
+                ->bind(['id_tarefa' => $this->getId()]);
+        return $query->execute();
+    }
+    
+    public function getItens(){
+        $query = TarefaItens::query()
+                ->columns(['id', 'titulo', 'descricao', 'porcentagem','status'])
+                ->where('id_tarefa = :id_tarefa:')
+                ->bind(['id_tarefa' => $this->getId()]);
+        return $query->execute();
+    }
+    
+    public function validation(){
+        $this->validate(new PresenceOf([
+            "field" => "titulo",
+            "message" => "O título da tarefa é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "descricao",
+            "message" => "A descricao da tarefa é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "tipo",
+            "message" => "O tipo da tarefa é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "id_projeto",
+            "message" => "Toda tarefa necessita de um projeto!"
+        ]));
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+        $this->validate(new Uniqueness([
+            "field" => "titulo",
+            "message" => "Título da tarefa escolhido já utilizado!"
+        ]));
+
+
+        return !$this->validationHasFailed();
     }
 
 }

@@ -40,6 +40,14 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $status;
+    
+    const STATUS_NAO_CONCLUIDO = 0;
+    const STATUS_CONCLUIDO = 1;
+    
+    public static $status_desc = [
+        self::STATUS_NAO_CONCLUIDO => 'Não concluído',
+        self::STATUS_CONCLUIDO => 'Concluído',
+    ];
 
     /**
      * Method to set the value of field id

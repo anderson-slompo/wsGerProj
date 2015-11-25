@@ -88,13 +88,13 @@ $app->mount($departamento);
 /*******************************************************/
 $projetoAnexos = new MicroCollection();
 
-$departamento->setHandler(new A\ProjetoAnexosController());
-$departamento->setPrefix('/admin/projeto_anexos');
-$departamento->post('/', 'create');
-$departamento->get('/{id}', 'show');
-$departamento->delete('/', 'delete');
+$projetoAnexos->setHandler(new A\ProjetoAnexosController());
+$projetoAnexos->setPrefix('/admin/projeto_anexos');
+$projetoAnexos->post('/', 'create');
+$projetoAnexos->get('/{id}', 'show');
+$projetoAnexos->delete('/', 'delete');
 
-$app->mount($departamento);
+$app->mount($projetoAnexos);
 
 /*******************************************************/
 $download = new MicroCollection();
@@ -103,3 +103,33 @@ $download->setPrefix('/download');
 $download->get('/{id}','download');
 
 $app->mount($download);
+
+/*******************************************************/
+$tarefa = new MicroCollection();
+
+$tarefa->setHandler(new A\TarefasController());
+$tarefa->setPrefix('/admin/tarefas');
+$tarefa->get('/', 'index');
+$tarefa->get('/{id}', 'show');
+$tarefa->post('/', 'create');
+$tarefa->put('/{id}', 'update');
+$tarefa->delete('/{id}', 'delete');
+
+$tarefa->get('/tipos', 'getTipos');
+$tarefa->get('/status', 'getStatus');
+
+$app->mount($tarefa);
+
+/*******************************************************/
+
+$tarefaAnexos = new MicroCollection();
+
+$tarefaAnexos->setHandler(new A\TarefaAnexosController());
+$tarefaAnexos->setPrefix('/admin/tarefa_anexos');
+$tarefaAnexos->post('/', 'create');
+$tarefaAnexos->get('/{id}', 'show');
+$tarefaAnexos->delete('/', 'delete');
+
+$app->mount($tarefaAnexos);
+
+/*******************************************************/
