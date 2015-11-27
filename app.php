@@ -20,7 +20,7 @@ function exception_error_handler($severity, $message, $file, $line) {
         return;
     }
     
-    throw new \ErrorException($message, 500, $severity, $file, $line);
+    throw new \ErrorException("{$message} [{$file} - {$line}]", 500, $severity, $file, $line);
 }
 set_error_handler("exception_error_handler");
 

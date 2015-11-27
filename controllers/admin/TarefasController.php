@@ -19,15 +19,13 @@ use wsGerProj\Controllers\RestController,
 class TarefasController extends ControllerBase implements RestController {
 
     public function create() {
+        $this->db->begin();
+
         $tarefa = $this->createTarefaFromJsonRawData();
-        $valid = $tarefa->validation();
-        die(var_dump($valid,true));
-        if ($tarefa->validation() && $tarefa->save()) {
-            $id = $tarefa->getId();
-            return PostResponse::createResponse(PostResponse::STATUS_OK, ['message' => "Tarefa [#{$id} {$tarefa->getTitulo()}] inserida com sucesso.", 'id' => $id]);
-        } else {
-            throw new \Exception(PostResponse::createModelErrorMessages($tarefa), StatusCodes::ERRO_CLI);
-        }
+
+        $id = $tarefa->getId();
+        $this->db->commit();
+        return PostResponse::createResponse(PostResponse::STATUS_OK, ['message' => "Tarefa [#{$id} {$tarefa->getNome()}] inserida com sucesso.", 'id' => $id]);
     }
 
     public function delete($id) {
@@ -90,7 +88,19 @@ class TarefasController extends ControllerBase implements RestController {
     }
 
     public function update($id) {
-        
+        $tarefa = Tarefa::findFirst($id);
+
+        if ($tarefa) {
+
+            $this->db->begin();
+
+            $this->createTarefaFromJsonRawData($tarefa);
+
+            $this->db->commit();
+            return PostResponse::createResponse(PostResponse::STATUS_OK, "Tarefa [#{$id} {$tarefa->getNome()}] alterada com sucesso.");
+        } else {
+            throw new \Exception("Tarefa #{$id} não encontrada", StatusCodes::NAO_ENCONTRADO);
+        }
     }
 
     public function getTipos() {
@@ -106,36 +116,43 @@ class TarefasController extends ControllerBase implements RestController {
         $dataPost = $this->request->getJsonRawBody();
 
         if (is_null($tarefa)) {
-            $tarefa = new Tarefa;
+            $tarefa = new Tarefa();
         }
 
         $tarefa->setDescricao($dataPost->descricao);
         $tarefa->setIdProjeto($dataPost->id_projeto);
         $tarefa->setNome($dataPost->nome);
         $tarefa->setTipo($dataPost->tipo);
-
-//        $tarefa->tarefaItens = $this->createTarefaItens($dataPost,$tarefa);
-
-        return $tarefa;
+        if (!is_numeric($tarefa->getId())) {
+            $tarefa->setStatus(Tarefa::STATUS_NOVA);
+        }
+        if ($tarefa->validation() && $tarefa->save()) {
+            $this->createTarefaItens($tarefa, $dataPost);
+            return $tarefa;
+        } else {
+            $this->db->rollback();
+            throw new \Exception(PostResponse::createModelErrorMessages($tarefa), StatusCodes::ERRO_CLI);
+        }
     }
 
-    public function createTarefaItens($dataPost, Tarefa $tarefa) {
-
-        $itens = [];
+    public function createTarefaItens(Tarefa $tarefa, $dataPost) {
 
         foreach ($dataPost->add_itens as $postItem) {
             $item = new TarefaItens();
-            
+
             $item->setDescricao($postItem->descricao);
             $item->setPorcentagem($postItem->porcentagem);
             $item->setTitulo($postItem->titulo);
             $item->setStatus(TarefaItens::STATUS_NAO_CONCLUIDO);
-            $item->setIdTarefa($tarefa);
-            
-            $itens[] = $item;
+            $item->setIdTarefa($tarefa->getId());
+
+            if (!$item->validation() || !$item->save()) {
+                $this->db->rollback();
+                throw new \Exception(PostResponse::createModelErrorMessages($item), StatusCodes::ERRO_CLI);
+            }
         }
 
-        return $itens;
+        return true;
     }
 
 }

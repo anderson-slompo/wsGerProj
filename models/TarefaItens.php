@@ -2,8 +2,10 @@
 
 namespace wsGerProj\Models;
 
-class TarefaItens extends \Phalcon\Mvc\Model
-{
+use Phalcon\Mvc\Model\Validator\PresenceOf,
+    Phalcon\Mvc\Model\Validator\Numericality;
+
+class TarefaItens extends \Phalcon\Mvc\Model {
 
     /**
      *
@@ -40,10 +42,10 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $status;
-    
+
     const STATUS_NAO_CONCLUIDO = 0;
     const STATUS_CONCLUIDO = 1;
-    
+
     public static $status_desc = [
         self::STATUS_NAO_CONCLUIDO => 'Não concluído',
         self::STATUS_CONCLUIDO => 'Concluído',
@@ -55,8 +57,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @param integer $id
      * @return $this
      */
-    public function setId($id)
-    {
+    public function setId($id) {
         $this->id = $id;
 
         return $this;
@@ -68,8 +69,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @param integer $id_tarefa
      * @return $this
      */
-    public function setIdTarefa($id_tarefa)
-    {
+    public function setIdTarefa($id_tarefa) {
         $this->id_tarefa = $id_tarefa;
 
         return $this;
@@ -81,8 +81,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @param string $titulo
      * @return $this
      */
-    public function setTitulo($titulo)
-    {
+    public function setTitulo($titulo) {
         $this->titulo = $titulo;
 
         return $this;
@@ -94,8 +93,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @param string $descricao
      * @return $this
      */
-    public function setDescricao($descricao)
-    {
+    public function setDescricao($descricao) {
         $this->descricao = $descricao;
 
         return $this;
@@ -107,8 +105,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @param integer $porcentagem
      * @return $this
      */
-    public function setPorcentagem($porcentagem)
-    {
+    public function setPorcentagem($porcentagem) {
         $this->porcentagem = $porcentagem;
 
         return $this;
@@ -120,8 +117,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @param integer $status
      * @return $this
      */
-    public function setStatus($status)
-    {
+    public function setStatus($status) {
         $this->status = $status;
 
         return $this;
@@ -132,8 +128,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
@@ -142,8 +137,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getIdTarefa()
-    {
+    public function getIdTarefa() {
         return $this->id_tarefa;
     }
 
@@ -152,8 +146,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getTitulo()
-    {
+    public function getTitulo() {
         return $this->titulo;
     }
 
@@ -162,8 +155,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getDescricao()
-    {
+    public function getDescricao() {
         return $this->descricao;
     }
 
@@ -172,8 +164,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getPorcentagem()
-    {
+    public function getPorcentagem() {
         return $this->porcentagem;
     }
 
@@ -182,19 +173,16 @@ class TarefaItens extends \Phalcon\Mvc\Model
      *
      * @return integer
      */
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->status;
     }
 
     /**
      * Initialize method for model.
      */
-    public function initialize()
-    {
+    public function initialize() {
         $this->setSchema("public");
-        $this->belongsTo('id_tarefa', 'wsGerProj\Models\Tarefa', 'id', array('alias' => 'Tarefa'));
-        $this->belongsTo('id_tarefa', 'wsGerProj\Models\Tarefa', 'id', array('foreignKey' => true,'alias' => 'Tarefa'));
+        $this->belongsTo('id_tarefa', 'wsGerProj\Models\Tarefa', 'id', array('foreignKey' => true, 'alias' => 'Tarefa'));
     }
 
     /**
@@ -202,8 +190,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      *
      * @return string
      */
-    public function getSource()
-    {
+    public function getSource() {
         return 'tarefa_itens';
     }
 
@@ -213,8 +200,7 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @param mixed $parameters
      * @return TarefaItens[]
      */
-    public static function find($parameters = null)
-    {
+    public static function find($parameters = null) {
         return parent::find($parameters);
     }
 
@@ -224,9 +210,32 @@ class TarefaItens extends \Phalcon\Mvc\Model
      * @param mixed $parameters
      * @return TarefaItens
      */
-    public static function findFirst($parameters = null)
-    {
+    public static function findFirst($parameters = null) {
         return parent::findFirst($parameters);
+    }
+
+    public function validation() {
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+        $this->validate(new PresenceOf([
+            "field" => "titulo",
+            "message" => "O titulo do item da tarefa é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "descricao",
+            "message" => "A descrição do item da tarefa é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "porcentagem",
+            "message" => "A porcentagem do item é obrigatória!"
+        ]));
+        $this->validate(new Numericality([
+            "field" => "porcentagem",
+            "message" => "A porcentagem do item deve ser um numero!"
+        ]));
+        
+        return !$this->validationHasFailed();
     }
 
 }

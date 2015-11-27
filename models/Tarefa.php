@@ -262,8 +262,8 @@ class Tarefa extends \Phalcon\Mvc\Model {
     
     public function validation(){
         $this->validate(new PresenceOf([
-            "field" => "titulo",
-            "message" => "O título da tarefa é obrigatório!"
+            "field" => "nome",
+            "message" => "O nome da tarefa é obrigatório!"
         ]));
         $this->validate(new PresenceOf([
             "field" => "descricao",
@@ -281,11 +281,10 @@ class Tarefa extends \Phalcon\Mvc\Model {
             $this->_operationMade=2;
         }
         $this->validate(new Uniqueness([
-            "field" => "titulo",
-            "message" => "Título da tarefa escolhido já utilizado!"
+            "field" => "nome",
+            "message" => "Nome da tarefa escolhido já utilizado!"
         ]));
-
-
+        
         return !$this->validationHasFailed();
     }
 

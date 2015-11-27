@@ -69,8 +69,6 @@ class TarefaAnexos extends \Phalcon\Mvc\Model
     public function initialize()
     {
         $this->setSchema("public");
-        $this->belongsTo('id_anexo', 'wsGerProj\Models\Anexo', 'id', array('alias' => 'Anexo'));
-        $this->belongsTo('id_tarefa', 'wsGerProj\Models\Tarefa', 'id', array('alias' => 'Tarefa'));
         $this->belongsTo('id_anexo', 'wsGerProj\Models\Anexo', 'id', array('foreignKey' => true,'alias' => 'Anexo'));
         $this->belongsTo('id_tarefa', 'wsGerProj\Models\Tarefa', 'id', array('foreignKey' => true,'alias' => 'Tarefa'));
     }
