@@ -110,6 +110,13 @@ class TarefasController extends ControllerBase implements RestController {
     public function getStatus() {
         return Tarefa::$statusDesc;
     }
+    public function getTipoID($id) {
+        return ['id' => $id, 'nome' => Tarefa::$tipoDesc[$id]];
+    }
+
+    public function getStatusID($id) {
+        return ['id' => $id, 'nome' => Tarefa::$statusDesc[$id]];
+    }
 
     private function createTarefaFromJsonRawData(Tarefa $tarefa = NULL) {
 
@@ -120,9 +127,9 @@ class TarefasController extends ControllerBase implements RestController {
         }
 
         $tarefa->setDescricao($dataPost->descricao);
-        $tarefa->setIdProjeto($dataPost->id_projeto);
+        $tarefa->setIdProjeto($dataPost->id_projeto->id);
         $tarefa->setNome($dataPost->nome);
-        $tarefa->setTipo($dataPost->tipo);
+        $tarefa->setTipo($dataPost->tipo->id);
         if (!is_numeric($tarefa->getId())) {
             $tarefa->setStatus(Tarefa::STATUS_NOVA);
         }

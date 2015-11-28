@@ -118,6 +118,9 @@ $tarefa->delete('/{id}', 'delete');
 $tarefa->get('/tipos', 'getTipos');
 $tarefa->get('/status', 'getStatus');
 
+$tarefa->get('/tipos/{id}', 'getTipoID');
+$tarefa->get('/status/{id}', 'getStatusID');
+
 $app->mount($tarefa);
 
 /*******************************************************/
