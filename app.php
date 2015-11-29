@@ -7,44 +7,62 @@ error_reporting(E_ALL);
  * Local variables
  * @var \Phalcon\Mvc\Micro $app
  */
-use Phalcon\Http\Response;
-use wsGerProj\Http\StatusCodes;
+use Phalcon\Http\Response,
+    wsGerProj\Http\StatusCodes,
+    wsGerProj\Middlewares\AuthMiddleware,
+    Phalcon\Events\Manager as EventsManager,
+    wsGerProj\Config\Settings;
 
 define('WS_HOST', 'http://localhost.wsGerProj');
 define('UPLOAD_PATH', '/var/www/html/wsGerProj/public/uploads/');
-
 
 function exception_error_handler($severity, $message, $file, $line) {
     if (!(error_reporting() & $severity)) {
         // This error code is not included in error_reporting
         return;
     }
-    
+
     throw new \ErrorException("{$message} [{$file} - {$line}]", 500, $severity, $file, $line);
 }
+
 set_error_handler("exception_error_handler");
 
 require_once 'http/routes/admin.php';
 
-//$app->before(function() use ($app) {
-//    
-//    $token = $app->request->getHeader('auth-token');
-//    if( empty($token) ){
-//        throw new \Exception("É necessário estar registrado no sistema para realizar requisições.", StatusCodes::NAO_AUTORIZADO);
-//        
-//    } else{
-//        return true;
+//$eventsManager = new EventsManager();
+//$eventsManager->attach('micro', function ($event, $app) {
+//    if ($event->getType() == 'beforeExecuteRoute') {
+//        $skippedRoutes = ['login', 'check-token'];
+//        $routeName = $app['router']->getMatchedRoute()->getName();
+//        if (!in_array($routeName, $skippedRoutes)) {
+//            $auth = $app->request->getDigestAuth();
+//            if (count($auth)) {
+//                $m = $app->getDI()->get('memcached');
+//                $data = $m->get($auth['token']);
+//                if ($m->getResultCode() == \Memcached::RES_NOTFOUND) {
+//                    throw new \Exception('É necessário estar registrado no sistema para realizar requisições.', StatusCodes::NAO_AUTORIZADO);
+//                } else {
+//                    $m->set($auth['token'], $data, time() + Settings::LOGIN_EXPIRATION); //renova 
+//                    return true;
+//                }
+//            } else{
+//                throw new \Exception('É necessário estar registrado no sistema para realizar requisições.', StatusCodes::NAO_AUTORIZADO);
+//            }
+//        } else {
+//            return true;
+//        }
 //    }
 //});
+//$app->setEventsManager($eventsManager);
 
 $app->error(function ($exception) {
-    
+
     $response = new Response();
     $response->setContentType('application/json', 'UTF-8');
     $response->setStatusCode($exception->getCode());
     $response->setHeader("Access-Control-Allow-Origin", "*");
     $response->setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
-    $response->setHeader("Access-Control-Allow-Headers", "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type");
+    $response->setHeader("Access-Control-Allow-Headers", "Authorization,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type");
     $response->setJsonContent(['error' => $exception->getMessage()]);
     $response->send();
     return false;
@@ -52,15 +70,13 @@ $app->error(function ($exception) {
 
 $app->after(function () use ($app) {
     $return = $app->getReturnedValue();
-    
-    if( $return instanceof  Response){
+
+    if ($return instanceof Response) {
         $return->send();
-        
-    } else{        
+    } else {
         $response = new Response();
         $response->setContentType('application/json', 'UTF-8');
         $response->setJsonContent($return);
         $response->send();
     }
-    
 });

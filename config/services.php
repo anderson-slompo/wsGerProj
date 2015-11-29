@@ -1,10 +1,10 @@
 <?php
+use wsGerProj\Config\Settings;
 /**
  * Services are globally registered in this file
  *
  * @var \Phalcon\Config $config
  */
-
 use Phalcon\Mvc\View\Simple as View;
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Di\FactoryDefault;
@@ -35,4 +35,10 @@ $di->set('url', function () use ($config) {
  */
 $di->set('db', function () use ($config) {
     return new DbAdapter($config->database->toArray());
+});
+
+$di->set('memcached', function() {
+    $m = new \Memcached();
+    $m->addServer(Settings::MEMCACHE_HOST, Settings::MEMCACHE_PORT);
+    return $m;
 });

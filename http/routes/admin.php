@@ -4,6 +4,16 @@ use Phalcon\Mvc\Micro\Collection as MicroCollection;
 use wsGerProj\Controllers\Admin as A;
 
 /*******************************************************/
+
+$auth = new MicroCollection();
+
+$auth->setHandler(new A\AuthController());
+$auth->setPrefix('/admin/auth');
+$auth->post('/', 'login', 'login');
+$auth->get('/{token}', 'checkToken', 'check-token');
+
+$app->mount($auth);
+/*******************************************************/
 $clientes = new MicroCollection();
 
 $clientes->setHandler(new A\ClienteController());
