@@ -10,5 +10,6 @@ final class StatusCodes {
     const ERRO_CLI_CONFLICT = 409;
     const NAO_AUTORIZADO = 401;
     const NAO_ENCONTRADO = 404;
+    const ERRO_SERVIDOR = 500;
 
 }

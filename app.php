@@ -29,31 +29,31 @@ set_error_handler("exception_error_handler");
 
 require_once 'http/routes/admin.php';
 
-//$eventsManager = new EventsManager();
-//$eventsManager->attach('micro', function ($event, $app) {
-//    if ($event->getType() == 'beforeExecuteRoute') {
-//        $skippedRoutes = ['login', 'check-token'];
-//        $routeName = $app['router']->getMatchedRoute()->getName();
-//        if (!in_array($routeName, $skippedRoutes)) {
-//            $auth = $app->request->getDigestAuth();
-//            if (count($auth)) {
-//                $m = $app->getDI()->get('memcached');
-//                $data = $m->get($auth['token']);
-//                if ($m->getResultCode() == \Memcached::RES_NOTFOUND) {
-//                    throw new \Exception('É necessário estar registrado no sistema para realizar requisições.', StatusCodes::NAO_AUTORIZADO);
-//                } else {
-//                    $m->set($auth['token'], $data, time() + Settings::LOGIN_EXPIRATION); //renova 
-//                    return true;
-//                }
-//            } else{
-//                throw new \Exception('É necessário estar registrado no sistema para realizar requisições.', StatusCodes::NAO_AUTORIZADO);
-//            }
-//        } else {
-//            return true;
-//        }
-//    }
-//});
-//$app->setEventsManager($eventsManager);
+$eventsManager = new EventsManager();
+$eventsManager->attach('micro', function ($event, $app) {
+    if ($event->getType() == 'beforeExecuteRoute') {
+        $skippedRoutes = ['login', 'check-token'];
+        $routeName = $app['router']->getMatchedRoute()->getName();
+        if (!in_array($routeName, $skippedRoutes)) {
+            $auth = $app->request->getDigestAuth();
+            if (count($auth)) {
+                $m = $app->getDI()->get('memcached');
+                $data = $m->get($auth['token']);
+                if ($m->getResultCode() == \Memcached::RES_NOTFOUND) {
+                    throw new \Exception('É necessário estar registrado no sistema para realizar requisições.'.$auth['token'], StatusCodes::NAO_AUTORIZADO);
+                } else {
+                    $m->set($auth['token'], $data, time() + Settings::LOGIN_EXPIRATION); //renova 
+                    return true;
+                }
+            } else{
+                throw new \Exception('É necessário estar registrado no sistema para realizar requisições2.', StatusCodes::NAO_AUTORIZADO);
+            }
+        } else {
+            return true;
+        }
+    }
+});
+$app->setEventsManager($eventsManager);
 
 $app->error(function ($exception) {
 

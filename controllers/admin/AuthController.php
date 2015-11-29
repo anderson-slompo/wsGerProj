@@ -34,8 +34,12 @@ class AuthController extends ControllerBase {
             $token = base64_encode(uniqid("user_id={$result->getId()}", true));
 
             $m = $this->getDI()->get('memcached');
-            $m->set($token, ['login' => $result->getLogin(), 'nome'=>$result->getNome()], time() + Settings::LOGIN_EXPIRATION);
+            $memCacheResult = $m->set($token, ['login' => $result->getLogin(), 'nome'=>$result->getNome()], time() + Settings::LOGIN_EXPIRATION);
 
+            if(!$memCacheResult){
+                throw new \Exception("Erro ao armazenar token: ".\Memcached::getResultCode(), StatusCodes::ERRO_SERVIDOR);
+            }
+            
             return [
                 'success' => true,
                 'token' => $token,
