@@ -8,13 +8,13 @@ return new \Phalcon\Config([
         'host' => 'localhost',
         'username' => 'postgres',
         'password' => 'senha',
-        'dbname' => 'gerproj',
-    // 'adapter'    =>  'Postgresql'
+        'dbname' => 'promind',
+    	//'adapter'    =>  'Postgresql'
     ],
     'application' => [
         'modelsDir' => APP_PATH . '/models/',
         'migrationsDir' => APP_PATH . '/migrations/',
         'viewsDir' => APP_PATH . '/views/',
-        'baseUri' => '/wsGerProj/',
+        'baseUri' => '/wspromind/',
     ]
 ]);

@@ -130,15 +130,15 @@ class FuncionarioController extends ControllerBase implements RestController {
         $funcionario->setDataNascimento($dataPost->data_nascimento);
         $funcionario->setSenha(md5($dataPost->senha));
         
-        $funcionario->funcionarioContatos = $this->createFuncionarioContatos($dataPost);
-        $funcionario->funcionarioEnderecos = $this->createFuncionarioEnderecos($dataPost);
-        $funcionario->projetoFuncionarios = $this->createFuncionarioProjetos($dataPost);
-        $funcionario->departamentosFuncionario = $this->createFuncionarioDepartamentos($dataPost);
+        $funcionario->funcionarioContatos = $this->createFuncionarioContatos($dataPost, $funcionario);
+        $funcionario->funcionarioEnderecos = $this->createFuncionarioEnderecos($dataPost, $funcionario);
+        $funcionario->projetoFuncionarios = $this->createFuncionarioProjetos($dataPost, $funcionario);
+        $funcionario->departamentosFuncionario = $this->createFuncionarioDepartamentos($dataPost, $funcionario);
 
         return $funcionario;
     }
 
-    private function createFuncionarioContatos($dataPost) {
+    private function createFuncionarioContatos($dataPost, $funcionario) {
         $contatos = [];
         foreach ($dataPost->contatos as $postContato) {
             $contato = new FuncionarioContatos();
@@ -152,7 +152,7 @@ class FuncionarioController extends ControllerBase implements RestController {
         return $contatos;
     }
 
-    private function createFuncionarioEnderecos($dataPost) {
+    private function createFuncionarioEnderecos($dataPost, $funcionario) {
         $enderecos = [];
         foreach ($dataPost->enderecos as $postEndereco) {
             $endereco = new FuncionarioEnderecos();
@@ -166,7 +166,7 @@ class FuncionarioController extends ControllerBase implements RestController {
         return $enderecos;
     }
 
-    private function createFuncionarioProjetos($dataPost) {
+    private function createFuncionarioProjetos($dataPost, $funcionario) {
         $projetos = [];
         foreach ($dataPost->projetos as $postProjeto) {
             $projeto = new ProjetoFuncionarios();
@@ -179,7 +179,7 @@ class FuncionarioController extends ControllerBase implements RestController {
         return $projetos;
     }
 
-    private function createFuncionarioDepartamentos($dataPost) {
+    private function createFuncionarioDepartamentos($dataPost, $funcionario) {
         $departamentos = [];
         foreach ($dataPost->departamentos as $postDepartamento) {
             $departamento = new DepartamentosFuncionario();

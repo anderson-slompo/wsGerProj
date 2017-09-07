@@ -10,7 +10,7 @@ $auth = new MicroCollection();
 $auth->setHandler(new A\AuthController());
 $auth->setPrefix('/admin/auth');
 $auth->post('/', 'login', 'login');
-$auth->get('/{token}', 'checkToken', 'check-token');
+$auth->get('/{token}', 'checkToken', 'checkToken');
 
 $app->mount($auth);
 /*******************************************************/

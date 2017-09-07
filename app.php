@@ -13,7 +13,7 @@ use Phalcon\Http\Response,
     Phalcon\Events\Manager as EventsManager,
     wsGerProj\Config\Settings;
 
-define('WS_HOST', 'http://localhost.wsGerProj');
+define('WS_HOST', 'http://localhost.wspromind');
 define('UPLOAD_PATH', '/var/www/html/wsGerProj/public/uploads/');
 
 function exception_error_handler($severity, $message, $file, $line) {
