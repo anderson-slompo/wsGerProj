@@ -47,10 +47,10 @@ class AuthController extends ControllerBase {
             $isImplantador = false;
             $departamentos = $result->getDepartamentos()->toArray();
             foreach($departamentos as $dep){
-                $isGerente = ($dep['id'] == Departamento::GERENCIA && !$isGerente);
-                $isDesenvolvedor = ($dep['id'] == Departamento::DESENVOLVIMENTO && !$isDesenvolvedor);
-                $isTester = ($dep['id'] == Departamento::TESTE && !$isTester);
-                $isImplantador = ($dep['id'] == Departamento::IMPLANTACAO && !$isImplantador);
+                $isGerente = ($dep['id'] == Departamento::GERENCIA && !$isGerente) ? true : $isGerente;
+                $isDesenvolvedor = ($dep['id'] == Departamento::DESENVOLVIMENTO && !$isDesenvolvedor) ? true : $isDesenvolvedor;
+                $isTester = ($dep['id'] == Departamento::TESTE && !$isTester) ? true : $isTester;
+                $isImplantador = ($dep['id'] == Departamento::IMPLANTACAO && !$isImplantador) ? true : $isImplantador;
             }
             
             return [
