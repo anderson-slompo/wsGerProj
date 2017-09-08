@@ -110,7 +110,7 @@ $app->mount($projetoAnexos);
 $download = new MicroCollection();
 $download->setHandler(new wsGerProj\Controllers\DownloadController());
 $download->setPrefix('/download');
-$download->get('/{id}','download');
+$download->get('/{id}', 'download', 'download');
 
 $app->mount($download);
 

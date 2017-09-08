@@ -4,7 +4,10 @@ namespace wsGerProj\Models;
 
 class Departamento extends \Phalcon\Mvc\Model
 {
-
+    const DESENVOLVIMENTO = 1;
+    const TESTE = 2;
+    const IMPLANTACAO = 3;
+    const GERENCIA = 4;
     /**
      *
      * @var integer

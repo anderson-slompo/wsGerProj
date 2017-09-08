@@ -6,7 +6,8 @@ use wsGerProj\Controllers\ControllerBase,
     wsGerProj\Models\Funcionario,
     wsGerProj\Http\StatusCodes,
     wsGerProj\Config\Settings,
-    wsGerProj\Http\PostResponse;
+    wsGerProj\Http\PostResponse,
+    wsGerProj\Models\Departamento;
 
 /**
  * Description of AuthController
@@ -39,14 +40,30 @@ class AuthController extends ControllerBase {
             if(!$memCacheResult){
                 throw new \Exception("Erro ao armazenar token: ".\Memcached::getResultCode(), StatusCodes::ERRO_SERVIDOR);
             }
+
+            $isGerente = false;
+            $isDesenvolvedor = false;
+            $isTester = false;
+            $isImplantador = false;
+            $departamentos = $result->getDepartamentos()->toArray();
+            foreach($departamentos as $dep){
+                $isGerente = ($dep['id'] == Departamento::GERENCIA && !$isGerente);
+                $isDesenvolvedor = ($dep['id'] == Departamento::DESENVOLVIMENTO && !$isDesenvolvedor);
+                $isTester = ($dep['id'] == Departamento::TESTE && !$isTester);
+                $isImplantador = ($dep['id'] == Departamento::IMPLANTACAO && !$isImplantador);
+            }
             
             return [
                 'success' => true,
                 'token' => $token,
                 'usuario' => [
                     'login' => $result->getLogin(),
-                    'nome' => $result->getNome()
-                ]
+                    'nome' => $result->getNome(),
+                    'isGerente' => $isGerente,
+                    'isDesenvolvedor' => $isDesenvolvedor,
+                    'isTester' => $isTester,
+                    'isImplantador' => $isImplantador
+                ]                
             ];
         } else {
             throw new \Exception("Usuário e/ou senha incorretos", StatusCodes::NAO_AUTORIZADO);

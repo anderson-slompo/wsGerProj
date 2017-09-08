@@ -32,7 +32,7 @@ require_once 'http/routes/admin.php';
 $eventsManager = new EventsManager();
 $eventsManager->attach('micro', function ($event, $app) {
     if ($event->getType() == 'beforeExecuteRoute') {
-        $skippedRoutes = ['login', 'check-token'];
+        $skippedRoutes = ['login', 'check-token', 'download'];
         $routeName = $app['router']->getMatchedRoute()->getName();
         if (!in_array($routeName, $skippedRoutes)) {
             $auth = $app->request->getDigestAuth();
