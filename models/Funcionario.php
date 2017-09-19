@@ -294,6 +294,16 @@ class Funcionario extends \Phalcon\Mvc\Model
         return $query->execute();
     }
     
+    public static function getFuncionariosDepartamento($departamentoId){
+        return self::query()
+                    ->columns(['id', 'nome'])
+                    ->join('wsGerProj\Models\DepartamentosFuncionario')
+                    ->where('id_departamento = :id_departamento:')
+                    ->bind(['id_departamento'=>$departamentoId])
+                    ->execute()
+                    ->toArray();
+    }
+
     public function deleteRelated(){
         $this->getFuncionarioContatos()->delete();
         $this->getFuncionarioEnderecos()->delete();

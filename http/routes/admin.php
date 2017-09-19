@@ -146,3 +146,16 @@ $tarefaAnexos->delete('/', 'delete');
 $app->mount($tarefaAnexos);
 
 /*******************************************************/
+
+$tarefaAtribuicao = new MicroCollection();
+
+$tarefaAtribuicao->setHandler(new A\TarefaAtribuicaoController());
+$tarefaAtribuicao->setPrefix('/admin/tarefa_atribuicao');
+$tarefaAtribuicao->post('/', 'create');
+$tarefaAtribuicao->get('/{id}', 'show');
+$tarefaAtribuicao->get('/tarefa/{id}', 'getTarefa');
+// $tarefaAtribuicao->delete('/', 'delete');
+
+$app->mount($tarefaAtribuicao);
+
+/*******************************************************/
