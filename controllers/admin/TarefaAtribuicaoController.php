@@ -46,15 +46,17 @@ class TarefaAtribuicaoController extends ControllerBase implements RestControlle
         $result->setFetchMode(\Phalcon\Db::FETCH_OBJ);
         $return = $result->fetch();
         $return->status_nome = Tarefa::$statusDesc[$return->status];
-        if($return->status == Tarefa::STATUS_NOVA || $return->status == Tarefa::STATUS_RETORNO_TESTE){
-            $return->funcionarios = Funcionario::getFuncionariosDepartamento(Departamento::DESENVOLVIMENTO);
-        } elseif($return->status == Tarefa::STATUS_AGUARDANTO_TESTE){
-            $return->funcionarios = Funcionario::getFuncionariosDepartamento(Departamento::TESTE);
-        } elseif($return->status == Tarefa::STATUS_AGUARDANDO_IMPLANTACAO){
-            $return->funcionarios = Funcionario::getFuncionariosDepartamento(Departamento::IMPLANTACAO);
-        } else{
-            throw new \Exception("A tarefa não pode ser atribuida pois já esta atribuida na fase atual", 400);
-        }
+        
+        $devs =  Funcionario::getFuncionariosDepartamento(Departamento::DESENVOLVIMENTO);
+
+        $return->funcionarios = array(
+            TarefaAtribuicao::FASE_DESENVOLVIMENTO => $devs,
+            TarefaAtribuicao::FASE_TESTES => Funcionario::getFuncionariosDepartamento(Departamento::TESTE),
+            TarefaAtribuicao::FASE_RETORNO_TESTES => $devs,
+            TarefaAtribuicao::FASE_IMPLANTACAO => Funcionario::getFuncionariosDepartamento(Departamento::IMPLANTACAO),
+        );
+
+        $return->fases = TarefaAtribuicao::$fasesDesc;
 
         return $return;
     }
@@ -87,7 +89,14 @@ class TarefaAtribuicaoController extends ControllerBase implements RestControlle
         $atribuicao->setDataInicio($dataPost->data_inicio);
         $atribuicao->setDataTermino($dataPost->data_termino);
         $atribuicao->setDataHora(date('Y-m-d H:i:s'));
-
-        return $atribuicao;
+        $atribuicao->setFase($dataPost->fase);
+        
+        if ($atribuicao->validation() && $atribuicao->save()) {
+            return $atribuicao;
+        } else {
+            $this->db->rollback();
+            throw new \Exception(PostResponse::createModelErrorMessages($atribuicao), StatusCodes::ERRO_CLI);
+        }
     }
+
 }

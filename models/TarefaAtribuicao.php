@@ -2,6 +2,8 @@
 
 namespace wsGerProj\Models;
 
+use Phalcon\Mvc\Model\Validator\PresenceOf;
+
 class TarefaAtribuicao extends \Phalcon\Mvc\Model
 {
 
@@ -46,6 +48,18 @@ class TarefaAtribuicao extends \Phalcon\Mvc\Model
      * @var string
      */
     protected $data_hora;
+
+    const FASE_DESENVOLVIMENTO = 1;
+    const FASE_TESTES = 2;
+    const FASE_RETORNO_TESTES = 3;
+    const FASE_IMPLANTACAO = 4;
+
+    public static $fasesDesc = array(
+        self::FASE_DESENVOLVIMENTO => 'Desenvolvimento',
+        self::FASE_TESTES          => 'Testes',
+        self::FASE_RETORNO_TESTES  => 'Retorno de Testes',
+        self::FASE_IMPLANTACAO     => 'Implantação'
+    );
 
     /**
      * Method to set the value of field id
@@ -250,6 +264,30 @@ class TarefaAtribuicao extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    public function validation(){
+        $this->validate(new PresenceOf([
+            "field" => "id_funcionario",
+            "message" => "O funcionário é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "id_tarefa",
+            "message" => "A tarefa é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "data_inicio",
+            "message" => "A data de início é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "data_termino",
+            "message" => "A data de término é obrigatória!"
+        ]));
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+        
+        return !$this->validationHasFailed();
     }
 
 }
