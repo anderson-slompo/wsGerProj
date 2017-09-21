@@ -42,6 +42,9 @@ $eventsManager->attach('micro', function ($event, $app) {
                 if ($m->getResultCode() == \Memcached::RES_NOTFOUND) {
                     throw new \Exception('É necessário estar registrado no sistema para realizar requisições.'.$auth['token'], StatusCodes::NAO_AUTORIZADO);
                 } else {
+                    $app->getDI()->set('currentUser', function() use($data){
+                        return $data;
+                    });
                     $m->set($auth['token'], $data, time() + Settings::LOGIN_EXPIRATION); //renova 
                     return true;
                 }

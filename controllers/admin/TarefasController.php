@@ -65,6 +65,16 @@ class TarefasController extends ControllerBase implements RestController {
                 $query->bind($binds);
             }
         }
+
+        $user = $this->getDI()->get('currentUser');
+        if(!$user->isGerente){
+            if(count($user->projetos)){
+                $query->andWhere('id_projeto IN( '.implode(', ',$user->projetos).' )');
+            } else{
+                $query->andWhere('id_projeto is null');
+            }            
+        }
+
         if ($this->request->getQuery(DefaultParams::ORDER)) {
             $query->order($this->request->getQuery(DefaultParams::ORDER));
         }

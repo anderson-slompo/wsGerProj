@@ -42,3 +42,9 @@ $di->set('memcached', function() {
     $m->addServer(Settings::MEMCACHE_HOST, Settings::MEMCACHE_PORT);
     return $m;
 });
+
+$di->set('currentUser', function(wsGerProj\Models\Funcionario $func) {
+    $m = new \Memcached();
+    $m->addServer(Settings::MEMCACHE_HOST, Settings::MEMCACHE_PORT);
+    return $m;
+});

@@ -34,36 +34,19 @@ class AuthController extends ControllerBase {
             $result = $query[0];
             $token = base64_encode(uniqid("user_id={$result->getId()}", true));
 
+            $user = $result->getUserDefinition();
+
             $m = $this->getDI()->get('memcached');
-            $memCacheResult = $m->set($token, ['login' => $result->getLogin(), 'nome'=>$result->getNome()], time() + Settings::LOGIN_EXPIRATION);
+            $memCacheResult = $m->set($token, $user, time() + Settings::LOGIN_EXPIRATION);
 
             if(!$memCacheResult){
                 throw new \Exception("Erro ao armazenar token: ".\Memcached::getResultCode(), StatusCodes::ERRO_SERVIDOR);
             }
 
-            $isGerente = false;
-            $isDesenvolvedor = false;
-            $isTester = false;
-            $isImplantador = false;
-            $departamentos = $result->getDepartamentos()->toArray();
-            foreach($departamentos as $dep){
-                $isGerente = ($dep['id'] == Departamento::GERENCIA && !$isGerente) ? true : $isGerente;
-                $isDesenvolvedor = ($dep['id'] == Departamento::DESENVOLVIMENTO && !$isDesenvolvedor) ? true : $isDesenvolvedor;
-                $isTester = ($dep['id'] == Departamento::TESTE && !$isTester) ? true : $isTester;
-                $isImplantador = ($dep['id'] == Departamento::IMPLANTACAO && !$isImplantador) ? true : $isImplantador;
-            }
-            
             return [
                 'success' => true,
                 'token' => $token,
-                'usuario' => [
-                    'login' => $result->getLogin(),
-                    'nome' => $result->getNome(),
-                    'isGerente' => $isGerente,
-                    'isDesenvolvedor' => $isDesenvolvedor,
-                    'isTester' => $isTester,
-                    'isImplantador' => $isImplantador
-                ]                
+                'usuario' => $user   
             ];
         } else {
             throw new \Exception("Usuário e/ou senha incorretos", StatusCodes::NAO_AUTORIZADO);

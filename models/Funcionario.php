@@ -304,6 +304,24 @@ class Funcionario extends \Phalcon\Mvc\Model
                     ->toArray();
     }
 
+    public function getUserDefinition(){
+        $user = new User($this->getId(), $this->getNome(), $this->getLogin());
+        $departamentosResult = $this->getDepartamentos()->toArray();
+        $projetosResult = $this->getProjetos()->toArray();
+        $departamentos = array();
+        $projetos = array();
+        foreach($departamentosResult as $dep){
+            $departamentos[] = $dep['id'];
+        }
+        foreach($projetosResult as $proj){
+            $projetos[] = $proj['id'];
+        }
+
+        $user->setDepartamentos($departamentos);
+        $user->setProjetos($projetos);
+        return $user;
+    }
+
     public function deleteRelated(){
         $this->getFuncionarioContatos()->delete();
         $this->getFuncionarioEnderecos()->delete();
