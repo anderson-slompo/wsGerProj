@@ -154,6 +154,8 @@ $tarefaAtribuicao->setPrefix('/admin/tarefa_atribuicao');
 $tarefaAtribuicao->post('/', 'create');
 $tarefaAtribuicao->get('/{id}', 'show');
 $tarefaAtribuicao->get('/tarefa/{id}', 'getTarefa');
+$tarefaAtribuicao->get('/atuais', 'getTarefasAtuais');
+$tarefaAtribuicao->get('/a_iniciar', 'getTarefasAIniciar');
 // $tarefaAtribuicao->delete('/', 'delete');
 
 $app->mount($tarefaAtribuicao);

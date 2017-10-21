@@ -60,13 +60,22 @@ $app->setEventsManager($eventsManager);
 
 $app->error(function ($exception) {
 
+    if($exception instanceof \PDOException){
+        $code = StatusCodes::ERRO_CLI;
+        $messageSlices = explode("ERROR:", $exception->getMessage());
+        $message = array_pop($messageSlices);
+    } else{
+        $code = $exception->getCode();
+        $message = $exception->getMessage();
+    }
+
     $response = new Response();
     $response->setContentType('application/json', 'UTF-8');
-    $response->setStatusCode($exception->getCode());
+    $response->setStatusCode($code);
     $response->setHeader("Access-Control-Allow-Origin", "*");
     $response->setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
     $response->setHeader("Access-Control-Allow-Headers", "Authorization,DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type");
-    $response->setJsonContent(['error' => $exception->getMessage()]);
+    $response->setJsonContent(['error' => $message]);
     $response->send();
     return false;
 });

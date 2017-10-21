@@ -14,8 +14,73 @@ use wsGerProj\Controllers\RestController,
     wsGerProj\Models\Departamento;
 
 class TarefaAtribuicaoController extends ControllerBase implements RestController {
-    public function index(){
 
+    public static $statusTarefaBusca = [
+        Departamento::DESENVOLVIMENTO => [
+            Tarefa::STATUS_AGUARDANDO_DESENVOLVIMENTO,
+            Tarefa::STATUS_DESENVOLVIMENTO,
+            Tarefa::STATUS_RETORNO_TESTE
+        ],
+        Departamento::TESTE => [
+            Tarefa::STATUS_AGUARDANTO_TESTE,
+            Tarefa::STATUS_TESTE,
+        ],
+        Departamento::IMPLANTACAO => [
+            Tarefa::STATUS_AGUARDANDO_IMPLANTACAO,
+            Tarefa::STATUS_IMPLANTADA,
+        ]
+    ];
+
+    public function index(){}
+
+    public function getTarefasAtuais(){
+        $user = $this->getDI()->get('currentUser');
+        
+        $ret = [];
+        $db = $this->getDi()->getShared('db');
+        
+        if($user->isDesenvolvedor){
+            $result = $db->query($this->makeQueryAtribuicaoDepartamento($user->funcionario_id, Departamento::DESENVOLVIMENTO));
+            $ret[Departamento::DESENVOLVIMENTO] = $this->fetchTarefas($result);
+        }
+        if($user->isTester){
+            $result = $db->query($this->makeQueryAtribuicaoDepartamento($user->funcionario_id, Departamento::TESTE));
+            $ret[Departamento::TESTE] = $this->fetchTarefas($result);
+        }
+        if($user->isImplantador){
+            $result = $db->query($this->makeQueryAtribuicaoDepartamento($user->funcionario_id, Departamento::IMPLANTACAO));
+            $ret[Departamento::IMPLANTACAO] = $this->fetchTarefas($result);
+        }
+        return $ret;
+    }
+
+    private function fetchTarefas($result){
+        $ret = [];
+        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
+        while($row = $result->fetchArray()){
+            $row['status_nome'] = Tarefa::$statusDesc[$result['status']];
+            $ret[] = $row;
+        }
+
+        return $ret;
+    }
+
+    private function getStatusDepartamento($dep){
+        return implode(',', self::$statusTarefaBusca[$dep]);
+    }
+
+    private function makeQueryAtribuicaoDepartamento($funcionario_id, $departamento){
+        $sql = "SELECT t.id as tarefa_id,
+                        t.nome as tarefa_nome,
+                        p.nome as projeto_nome,
+                        t.tipo,
+                        t.status
+                FROM tarefa t
+                INNER JOIN projeto p ON p.id = t.id_projeto
+                INNER JOIN tarefa_atribuicao ta ON ta.id_tarefa = t.id and ta.id_funcionario = {$funcionario_id}
+                WHERE ta.id_funcionario = {$funcionario_id}
+                AND t.status IN( ? ) ";
+        return str_replace('?', $this->getStatusDepartamento($departamento), $sql);
     }
     
     public function show($id){
