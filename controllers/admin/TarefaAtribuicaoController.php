@@ -58,7 +58,7 @@ class TarefaAtribuicaoController extends ControllerBase implements RestControlle
         $ret = [];
         $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
         while($row = $result->fetchArray()){
-            $row['status_nome'] = Tarefa::$statusDesc[$result['status']];
+            $row['status_nome'] = Tarefa::$statusDesc[$row['status']];
             $ret[] = $row;
         }
 
@@ -70,17 +70,13 @@ class TarefaAtribuicaoController extends ControllerBase implements RestControlle
     }
 
     private function makeQueryAtribuicaoDepartamento($funcionario_id, $departamento){
-        $sql = "SELECT t.id as tarefa_id,
-                        t.nome as tarefa_nome,
-                        p.nome as projeto_nome,
-                        t.tipo,
-                        t.status
-                FROM tarefa t
-                INNER JOIN projeto p ON p.id = t.id_projeto
-                INNER JOIN tarefa_atribuicao ta ON ta.id_tarefa = t.id and ta.id_funcionario = {$funcionario_id}
-                WHERE ta.id_funcionario = {$funcionario_id}
-                AND t.status IN( ? ) ";
-        return str_replace('?', $this->getStatusDepartamento($departamento), $sql);
+        $sql = "SELECT *
+                FROM tarefas_atuais
+                WHERE id_funcionario = {$funcionario_id}
+                AND status IN( ? ) ";
+        $sql = str_replace('?', $this->getStatusDepartamento($departamento), $sql);
+        // die($sql);
+        return $sql;
     }
     
     public function show($id){

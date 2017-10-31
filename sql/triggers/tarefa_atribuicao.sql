@@ -63,7 +63,7 @@ LANGUAGE plpgsql VOLATILE
 COST 100;
 
 
-CREATE TRIGGER tarefa_log_trigger
+CREATE TRIGGER tarefa_atribuicao_trigger
 BEFORE INSERT 
 ON tarefa_atribuicao
 FOR EACH ROW

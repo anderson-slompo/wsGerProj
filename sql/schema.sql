@@ -127,6 +127,7 @@ CREATE TABLE public.erro (
                 nome VARCHAR(50) NOT NULL,
                 descricao TEXT NOT NULL,
                 id_projeto INTEGER,
+                corrigido boolean NOT NULL DEFAULT false,
                 CONSTRAINT erro_pk PRIMARY KEY (id)
 );
 COMMENT ON TABLE public.erro IS 'Armazena as inconsistencias encontradas pela equipe de testes para cada tarefa ou projeto.';
@@ -240,6 +241,7 @@ CREATE TABLE public.tarefa_atribuicao (
                 data_termino DATE NOT NULL,
                 fase INTEGER NOT NULL,
                 data_hora TIMESTAMP NOT NULL,
+                conclusao integer NOT NULL DEFAULT 0,
                 CONSTRAINT tarefa_atribuicao_pk PRIMARY KEY (id)
 );
 COMMENT ON TABLE public.tarefa_atribuicao IS 'Armazena as atribuições de tarefa a funcionarios, bem como seu prazo de execussão e conclusão.';
