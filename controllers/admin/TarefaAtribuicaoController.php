@@ -85,9 +85,10 @@ class TarefaAtribuicaoController extends ControllerBase implements RestControlle
         if ($atribuicao) {
 
             $atribuicaoRet = $atribuicao->toArray();
-            $atribuicao['tarefa'] = $atribuicao->getTarefa()->toArray();
+            $atribuicaoRet['tarefa'] = $atribuicao->getTarefa()->toArray();
+            $atribuicaoRet['tarefa']['status_nome'] = Tarefa::$statusDesc[$atribuicaoRet['tarefa']['status']];
             
-            return $tarefaRet;
+            return $atribuicaoRet;
         } else {
             throw new \Exception("Atribuição #{$id} não encontrada", StatusCodes::NAO_ENCONTRADO);
         }

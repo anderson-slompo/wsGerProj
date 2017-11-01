@@ -1,6 +1,7 @@
 DROP VIEW IF EXISTS tarefas_atuais;
 CREATE VIEW tarefas_atuais AS
-SELECT t.id as tarefa_id,
+SELECT ta.id as id,
+		t.id as tarefa_id,
         t.nome as tarefa_nome,
         p.nome as projeto_nome,
         ta.id_funcionario,
