@@ -161,3 +161,15 @@ $tarefaAtribuicao->get('/a_iniciar', 'getTarefasAIniciar');
 $app->mount($tarefaAtribuicao);
 
 /*******************************************************/
+
+$tarefaInteracao = new MicroCollection();
+
+$tarefaInteracao->setHandler(new A\TarefaInteracaoController());
+$tarefaInteracao->setPrefix('/admin/tarefa_interacao');
+$tarefaInteracao->post('/', 'create');
+$tarefaInteracao->get('/{id}', 'show');
+$tarefaInteracao->delete('/', 'delete');
+
+$app->mount($tarefaInteracao);
+
+/*******************************************************/

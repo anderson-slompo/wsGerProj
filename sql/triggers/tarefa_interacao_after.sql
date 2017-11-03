@@ -1,4 +1,7 @@
-CREATE OR REPLACE FUNCTION tarefa_interacao()
+DROP TRIGGER IF EXISTS tarefa_interacao_trigger ON tarefa_interacao;
+DROP FUNCTION IF EXISTS tarefa_interacao();
+
+CREATE FUNCTION tarefa_interacao()
   RETURNS trigger AS
 $BODY$
 DECLARE
@@ -58,6 +61,7 @@ BEGIN
 	IF proximo_status IS NOT NULL THEN
 		UPDATE tarefa SET status = proximo_status where id = NEW.id_tarefa;
 	END IF;
+	RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE

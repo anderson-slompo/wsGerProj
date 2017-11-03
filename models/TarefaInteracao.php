@@ -2,6 +2,9 @@
 
 namespace wsGerProj\Models;
 
+use Phalcon\Mvc\Model\Validator\Numericality,
+    Phalcon\Mvc\Model\Validator\PresenceOf;
+
 class TarefaInteracao extends \Phalcon\Mvc\Model
 {
 
@@ -250,6 +253,34 @@ class TarefaInteracao extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    public function validation(){
+        $this->validate(new PresenceOf([
+            "field" => "id_tarefa",
+            "message" => "A tarefa é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "id_funcionario",
+            "message" => "O funcionário é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "conclusao",
+            "message" => "O percentual de conclusão é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "fase",
+            "message" => "A fase da interação é obrigatória!"
+        ]));
+        $this->validate(new Numericality([
+            "field" => 'conclusao',
+            "message" => 'O percentual de conclusão deve ser numérico'
+        ]));
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+                
+        return !$this->validationHasFailed();
     }
 
 }
