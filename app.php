@@ -66,6 +66,9 @@ $app->error(function ($exception) {
         $message = array_pop($messageSlices);
     } else{
         $code = $exception->getCode();
+        if($code < 200 || $code > 500){
+            $code = 500;
+        }
         $message = $exception->getMessage();
     }
 

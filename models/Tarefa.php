@@ -259,6 +259,21 @@ class Tarefa extends \Phalcon\Mvc\Model {
                 ->bind(['id_tarefa' => $this->getId()]);
         return $query->execute();
     }
+    public function getAtribuicoes(){
+
+        $faseNomeField = "CASE fase ";
+        foreach(TarefaAtribuicao::$fasesDesc as $id_fase => $nome_fase){
+            $faseNomeField.= " WHEN {$id_fase} THEN '{$nome_fase}' ";
+        }
+        $faseNomeField.= " END AS fase_nome";
+
+        $query = TarefaAtribuicao::query()
+                ->join('wsGerProj\Models\Funcionario', "wsGerProj\Models\Funcionario.id = id_funcionario")
+                ->columns(['wsGerProj\Models\TarefaAtribuicao.id', 'id_funcionario', 'data_inicio', 'data_termino','fase', 'conclusao', 'nome as funcionario_nome', $faseNomeField])
+                ->where('id_tarefa = :id_tarefa:')
+                ->bind(['id_tarefa' => $this->getId()]);
+        return $query->execute();
+    }
     
     public function validation(){
         $this->validate(new PresenceOf([
