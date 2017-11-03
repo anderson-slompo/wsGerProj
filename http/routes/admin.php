@@ -173,3 +173,16 @@ $tarefaInteracao->delete('/', 'delete');
 $app->mount($tarefaInteracao);
 
 /*******************************************************/
+
+$erro = new MicroCollection();
+
+$erro->setHandler(new A\ErroController());
+$erro->setPrefix('/admin/erro');
+$erro->post('/', 'create');
+$erro->get('/{id}', 'show');
+$erro->put('/{id}', 'update');
+$erro->get('/', 'index');
+
+$app->mount($erro);
+
+/*******************************************************/

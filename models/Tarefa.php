@@ -274,6 +274,14 @@ class Tarefa extends \Phalcon\Mvc\Model {
                 ->bind(['id_tarefa' => $this->getId()]);
         return $query->execute();
     }
+
+    public function getErros(){
+        $query = Erro::query()
+                ->columns(['id', 'nome', 'descricao', "CASE corrigido WHEN TRUE THEN 'Sim' ELSE 'Não' END AS corrigido",'id_projeto', 'id_tarefa'])
+                ->where('id_tarefa = :id_tarefa:')
+                ->bind(['id_tarefa' => $this->getId()]);
+        return $query->execute();
+    }
     
     public function validation(){
         $this->validate(new PresenceOf([

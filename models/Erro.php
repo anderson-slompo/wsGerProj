@@ -2,6 +2,8 @@
 
 namespace wsGerProj\Models;
 
+use Phalcon\Mvc\Model\Validator\PresenceOf;
+
 class Erro extends \Phalcon\Mvc\Model
 {
 
@@ -34,6 +36,11 @@ class Erro extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $id_projeto;
+    /**
+     * 
+     * @var boolean
+     */
+    protected $corrigido;
 
     /**
      * Method to set the value of field id
@@ -101,6 +108,19 @@ class Erro extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Method to set the value of field corrigido
+     *
+     * @param boolean $corrigido
+     * @return $this
+     */
+    public function setCorrigido($corrigido)
+    {
+        $this->corrigido = $corrigido;
+
+        return $this;
+    }
+
+    /**
      * Returns the value of field id
      *
      * @return integer
@@ -151,6 +171,16 @@ class Erro extends \Phalcon\Mvc\Model
     }
 
     /**
+     * Returns the value of field corrigido
+     *
+     * @return boolean
+     */
+    public function getCorrigido()
+    {
+        return $this->corrigido;
+    }
+
+    /**
      * Initialize method for model.
      */
     public function initialize()
@@ -192,6 +222,30 @@ class Erro extends \Phalcon\Mvc\Model
     public static function findFirst($parameters = null)
     {
         return parent::findFirst($parameters);
+    }
+
+    public function validation(){
+        $this->validate(new PresenceOf([
+            "field" => "id_tarefa",
+            "message" => "A tarefa é obrigatória!"
+        ]));        
+        $this->validate(new PresenceOf([
+            "field" => "nome",
+            "message" => "O nome é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "descricao",
+            "message" => "A descrição é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => 'id_projeto',
+            "message" => 'O projeto é obrigatório!'
+        ]));
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+                
+        return !$this->validationHasFailed();
     }
 
 }
