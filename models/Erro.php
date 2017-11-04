@@ -43,6 +43,17 @@ class Erro extends \Phalcon\Mvc\Model
     protected $corrigido;
 
     /**
+     *
+     * @var integer
+     */
+    protected $id_funcionario;
+    /**
+     *
+     * @var integer
+     */
+    protected $id_funcionario_fix;
+
+    /**
      * Method to set the value of field id
      *
      * @param integer $id
@@ -120,6 +131,20 @@ class Erro extends \Phalcon\Mvc\Model
         return $this;
     }
 
+    public function setIdFuncionario($id_funcionario)
+    {
+        $this->id_funcionario = $id_funcionario;
+
+        return $this;
+    }
+
+    public function setIdFuncionarioFix($id_funcionario_fix)
+    {
+        $this->id_funcionario_fix = $id_funcionario_fix;
+
+        return $this;
+    }
+
     /**
      * Returns the value of field id
      *
@@ -180,6 +205,16 @@ class Erro extends \Phalcon\Mvc\Model
         return $this->corrigido;
     }
 
+    public function getIdFuncionario()
+    {
+        return $this->id_funcionario;
+    }
+
+    public function getIdFuncionarioFix()
+    {
+        return $this->id_funcionario_fix;
+    }
+
     /**
      * Initialize method for model.
      */
@@ -190,6 +225,8 @@ class Erro extends \Phalcon\Mvc\Model
         $this->belongsTo('id_tarefa', 'wsGerProj\Models\Tarefa', 'id', array('alias' => 'Tarefa'));
         $this->belongsTo('id_projeto', 'wsGerProj\Models\Projeto', 'id', array('foreignKey' => true,'alias' => 'Projeto'));
         $this->belongsTo('id_tarefa', 'wsGerProj\Models\Tarefa', 'id', array('foreignKey' => true,'alias' => 'Tarefa'));
+        $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('foreignKey' => true,'alias' => 'Funcionario'));
+        $this->belongsTo('id_funcionario_fix', 'wsGerProj\Models\Funcionario', 'id', array('foreignKey' => true,'alias' => 'FuncionarioFix'));
     }
 
     /**

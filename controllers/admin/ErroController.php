@@ -41,6 +41,8 @@ class ErroController extends ControllerBase implements RestController {
     public function createErroFromJsonRawData(){
         
         $dataPost = $this->request->getJsonRawBody();
+
+        $user = $this->getDI()->get('currentUser');
         
         $erro = new Erro();
         $erro->setCorrigido(false);
@@ -48,6 +50,8 @@ class ErroController extends ControllerBase implements RestController {
         $erro->setIdProjeto($dataPost->id_projeto);
         $erro->setIdTarefa($dataPost->id_tarefa);
         $erro->setNome($dataPost->nome);
+        $erro->setIdFuncionario($user->funcionario_id);
+        $erro->setIdFuncionarioFix(NULL);
         
         if ($erro->validation() && $erro->save()) {
             return $erro;

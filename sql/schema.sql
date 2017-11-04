@@ -127,6 +127,8 @@ CREATE TABLE public.erro (
                 nome VARCHAR(50) NOT NULL,
                 descricao TEXT NOT NULL,
                 id_projeto INTEGER,
+                id_funcionario integer NOT NULL,
+                id_funcionario_fix integer,
                 corrigido boolean NOT NULL DEFAULT false,
                 CONSTRAINT erro_pk PRIMARY KEY (id)
 );
@@ -136,6 +138,8 @@ COMMENT ON COLUMN public.erro.id_tarefa IS 'Identificador da tarefa.';
 COMMENT ON COLUMN public.erro.nome IS 'Palavra ou sentença que identifique brevemente o erro encontrado.';
 COMMENT ON COLUMN public.erro.descricao IS 'Descrição completa do erro e dos passos necessários para gerá-lo.';
 COMMENT ON COLUMN public.erro.id_projeto IS 'Identificador do projeto.';
+COMMENT ON COLUMN public.erro.id_funcionario IS 'Identificador do funcionário que reportou o erro.';
+COMMENT ON COLUMN public.erro.id_funcionario_fix IS 'Identificador do funcionário que corrigiu o erro.';
 
 
 ALTER SEQUENCE public.erro_id_seq OWNED BY public.erro.id;
@@ -440,6 +444,20 @@ REFERENCES public.tarefa (id)
 ON DELETE NO ACTION
 ON UPDATE NO ACTION
 NOT DEFERRABLE;
+
+ALTER TABLE public.erro ADD CONSTRAINT funcionario_erro_fk
+FOREIGN KEY (id_funcionario)
+REFERENCES public.funcionario (id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
+
+ALTER TABLE erro ADD CONSTRAINT funcionario_fix_fk 
+  FOREIGN KEY (id_funcionario_fix) 
+  REFERENCES funcionario (id) 
+  ON UPDATE NO ACTION 
+  ON DELETE NO ACTION;
+
 
 ALTER TABLE public.tarefa_anexos ADD CONSTRAINT tarefa_tarefa_anexos_fk
 FOREIGN KEY (id_tarefa)

@@ -9,7 +9,7 @@ BEGIN
     dados_depois := row_to_json(NEW);
     
     INSERT INTO tarefa_log (id_tarefa, data_hora, dados_antes, dados_depois, id_funcionario) VALUES( NEW.id_tarefa, NOW(), dados_antes, dados_depois, NEW.id_funcionario);
-
+    RETURN NEW;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE

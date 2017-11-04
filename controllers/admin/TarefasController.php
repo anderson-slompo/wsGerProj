@@ -92,6 +92,7 @@ class TarefasController extends ControllerBase implements RestController {
             $tarefaRet['anexos'] = $tarefa->getAnexos()->toArray();
             $tarefaRet['atribuicoes'] = $tarefa->getAtribuicoes()->toArray();
             $tarefaRet['erros'] = $tarefa->getErros()->toArray();
+            $tarefaRet['interacoes'] = $tarefa->getInteracoes()->toArray();
 
             return $tarefaRet;
         } else {

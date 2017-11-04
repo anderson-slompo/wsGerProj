@@ -259,13 +259,19 @@ class Tarefa extends \Phalcon\Mvc\Model {
                 ->bind(['id_tarefa' => $this->getId()]);
         return $query->execute();
     }
-    public function getAtribuicoes(){
 
+    private function getFasesField(){
         $faseNomeField = "CASE fase ";
         foreach(TarefaAtribuicao::$fasesDesc as $id_fase => $nome_fase){
             $faseNomeField.= " WHEN {$id_fase} THEN '{$nome_fase}' ";
         }
         $faseNomeField.= " END AS fase_nome";
+        return $faseNomeField;
+    }
+
+    public function getAtribuicoes(){
+
+        $faseNomeField = $this->getFasesField();
 
         $query = TarefaAtribuicao::query()
                 ->join('wsGerProj\Models\Funcionario', "wsGerProj\Models\Funcionario.id = id_funcionario")
@@ -276,9 +282,45 @@ class Tarefa extends \Phalcon\Mvc\Model {
     }
 
     public function getErros(){
+        $fields = [
+            'wsGerProj\Models\Erro.id', 
+            'wsGerProj\Models\Erro.nome', 
+            'wsGerProj\Models\Erro.descricao', 
+            "CASE corrigido WHEN TRUE THEN 'Sim' ELSE 'Não' END AS corrigido",
+            'id_projeto', 
+            'id_tarefa',
+            'id_funcionario',
+            'id_funcionario_fix',
+            'fr.nome as report_funcionario',
+            'ff.nome as fix_funcionario'
+        ];
         $query = Erro::query()
-                ->columns(['id', 'nome', 'descricao', "CASE corrigido WHEN TRUE THEN 'Sim' ELSE 'Não' END AS corrigido",'id_projeto', 'id_tarefa'])
+                ->innerJoin('wsGerProj\Models\Funcionario', "fr.id = id_funcionario", 'fr')
+                ->leftJoin('wsGerProj\Models\Funcionario', "fr.id = id_funcionario_fix", 'ff')
+                ->columns($fields)
                 ->where('id_tarefa = :id_tarefa:')
+                ->bind(['id_tarefa' => $this->getId()]);
+        return $query->execute();
+    }
+
+    public function getInteracoes(){
+        $faseNomeField = $this->getFasesField();
+        $fields = [
+            'wsGerProj\Models\TarefaInteracao.id', 
+            'wsGerProj\Models\TarefaInteracao.id_tarefa', 
+            'wsGerProj\Models\TarefaInteracao.id_funcionario', 
+            'wsGerProj\Models\TarefaInteracao.conclusao',
+            'wsGerProj\Models\TarefaInteracao.observacao', 
+            'wsGerProj\Models\TarefaInteracao.fase', 
+            "TO_CHAR(wsGerProj\Models\TarefaInteracao.data_hora, 'DD/MM/YYYY HH24:MI') AS data_hora",
+            $faseNomeField,
+            'f.nome as funcionario_nome'
+        ];
+        $query = TarefaInteracao::query()
+                ->innerJoin('wsGerProj\Models\Funcionario', "f.id = id_funcionario", 'f')
+                ->columns($fields)
+                ->where('id_tarefa = :id_tarefa:')
+                ->orderBy('wsGerProj\Models\TarefaInteracao.data_hora DESC')
                 ->bind(['id_tarefa' => $this->getId()]);
         return $query->execute();
     }

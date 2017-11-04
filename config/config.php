@@ -8,7 +8,7 @@ return new \Phalcon\Config([
         'host' => 'localhost',
         'username' => 'postgres',
         'password' => 'senha',
-        'dbname' => 'promind',
+        'dbname' => 'promind_novo',
     	//'adapter'    =>  'Postgresql'
     ],
     'application' => [
