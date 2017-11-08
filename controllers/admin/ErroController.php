@@ -30,8 +30,20 @@ class ErroController extends ControllerBase implements RestController {
         return PostResponse::createResponse(PostResponse::STATUS_OK, ['message' => "Erro reportado com sucesso.", 'id' => $id]);
     }
 
+    public function fix($id){
+        $this->db->begin();
+        $user = $this->getDI()->get('currentUser');
+
+        $erro = Erro::findFirst($id);
+        $erro->setIdFuncionarioFix($user->funcionario_id);
+        $erro->setCorrigido(true);
+        $erro->save();
+
+        return PostResponse::createResponse(PostResponse::STATUS_OK, ['message' => "Erro #{$id} corrigido com sucesso.", 'id' => $id]);
+    }
+
     public function update($id){
-        
+        throw new \Exception("Metodo nao implementado", StatusCodes::NAO_ENCONTRADO);
     }
 
     public function delete($id){

@@ -226,7 +226,7 @@ class Erro extends \Phalcon\Mvc\Model
         $this->belongsTo('id_projeto', 'wsGerProj\Models\Projeto', 'id', array('foreignKey' => true,'alias' => 'Projeto'));
         $this->belongsTo('id_tarefa', 'wsGerProj\Models\Tarefa', 'id', array('foreignKey' => true,'alias' => 'Tarefa'));
         $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('foreignKey' => true,'alias' => 'Funcionario'));
-        $this->belongsTo('id_funcionario_fix', 'wsGerProj\Models\Funcionario', 'id', array('foreignKey' => true,'alias' => 'FuncionarioFix'));
+        $this->belongsTo('id_funcionario_fix', 'wsGerProj\Models\Funcionario', 'id', array('alias' => 'FuncionarioFix'));
     }
 
     /**

@@ -57,6 +57,8 @@ BEGIN
 			IF NEW.conclusao >= 100 THEN
 				proximo_status:=8; -- implantada
 			END IF;
+		ELSE
+			RAISE EXCEPTION 'Fase informada inválida';
 	END CASE;
 	IF proximo_status IS NOT NULL THEN
 		UPDATE tarefa SET status = proximo_status where id = NEW.id_tarefa;

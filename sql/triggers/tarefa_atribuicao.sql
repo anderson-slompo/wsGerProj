@@ -3,6 +3,7 @@ CREATE OR REPLACE FUNCTION tarefa_atribuicao()
 $BODY$
 DECLARE
     atrib RECORD;
+    tarefa RECORD;
 BEGIN
 -- FASES atribuicao: 
 -- 1 -> Desenvolvimento
@@ -20,6 +21,31 @@ BEGIN
 -- 6 -> Retorno de testes
 -- 7 -> Aguardando Implantação
 -- 8 -> Implantada
+  
+  SELECT * INTO tarefa FROM tarefa WHERE id = NEW.id_tarefa;
+  IF tarefa.status = 4 AND NEW.fase = 1 THEN
+    RAISE EXCEPTION 'Não é possivel realizar a atribuição na fase de Desenvolvimento, pois a tarefa esta aguardando testes';
+  END IF;
+
+  IF tarefa.status = 5 AND NEW.fase = 1 THEN
+    RAISE EXCEPTION 'Não é possivel realizar a atribuição na fase de Desenvolvimento, pois a tarefa esta em testes';
+  END IF;
+
+  IF (tarefa.status = 6 AND NEW.fase IN(1,2)) THEN
+    RAISE EXCEPTION 'Não é possivel realizar a atribuição na fase de escolhida, pois a tarefa esta em retorno de testes';
+  END IF;
+
+  IF (tarefa.status = 7 AND NEW.fase IN(1,2,3)) THEN
+    RAISE EXCEPTION 'Não é possivel realizar a atribuição na fase de escolhida, pois a tarefa esta aguardando implpantação';
+  END IF;
+
+  IF tarefa.status = 0 THEN
+    RAISE EXCEPTION 'Não é possivel realizar a atribuição em uma tarefa cancelada';
+  END IF;
+
+  IF tarefa.status = 8 THEN
+    RAISE EXCEPTION 'Não é possivel realizar a atribuição em uma tarefa implantada';
+  END IF;
 
   CASE NEW.fase 
     WHEN 1 THEN
@@ -55,6 +81,8 @@ BEGIN
           END IF;
         END IF;
       END IF;
+    ELSE
+      RETURN NEW;
   END CASE;
   RETURN NEW;
 END;

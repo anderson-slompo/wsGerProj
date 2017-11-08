@@ -180,9 +180,21 @@ $erro->setHandler(new A\ErroController());
 $erro->setPrefix('/admin/erro');
 $erro->post('/', 'create');
 $erro->get('/{id}', 'show');
-$erro->put('/{id}', 'update');
+$erro->put('/fix/{id}', 'fix');
 $erro->get('/', 'index');
 
 $app->mount($erro);
+
+/*******************************************************/
+
+$dash = new MicroCollection();
+
+$dash->setHandler(new A\DashGerenteController());
+$dash->setPrefix('/admin/dash/gerente');
+
+$dash->get('/tarefasAguardandoAtribuicao', 'getTarefasAguardandoAtribuicao');
+$dash->get('/statusProjetos', 'getStatusProjetos');
+
+$app->mount($dash);
 
 /*******************************************************/
