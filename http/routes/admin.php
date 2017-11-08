@@ -194,6 +194,8 @@ $dash->setPrefix('/admin/dash/gerente');
 
 $dash->get('/tarefasAguardandoAtribuicao', 'getTarefasAguardandoAtribuicao');
 $dash->get('/statusProjetos', 'getStatusProjetos');
+$dash->get('/tarefasAtrasadas', 'getTarefasAtrasadas');
+$dash->get('/tarefasExecussao', 'getTarefasExecussao');
 
 $app->mount($dash);
 

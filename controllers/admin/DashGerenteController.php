@@ -29,4 +29,24 @@ class DashGerenteController extends ControllerBase{
         return $result->fetchAll();
     }
 
+    public function getTarefasAtrasadas(){
+        $db = $this->getDi()->getShared('db');
+
+        $sql = "SELECT * FROM tarefas_atuais WHERE atrasada IS TRUE ORDER BY inicio";
+        $result = $db->query($sql);
+        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
+
+        return $result->fetchAll();
+    }
+
+    public function getTarefasExecussao(){
+        $db = $this->getDi()->getShared('db');
+
+        $sql = "SELECT * FROM tarefas_atuais ORDER BY inicio";
+        $result = $db->query($sql);
+        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
+
+        return $result->fetchAll();
+    }
+    
 }
