@@ -20,8 +20,22 @@ SELECT ta.id as id,
              WHEN t.status = 5 THEN 'Testes'
              WHEN t.status = 6 THEN 'Retorno de testes'
              WHEN t.status = 7 THEN 'Aguardando Implantação'
-             WHEN t.status = 8 THEN 'Implantada' END AS status_nome
+             WHEN t.status = 8 THEN 'Implantada' END AS status_nome,
+        ta.fase,
+        CASE WHEN ta.fase = 1 THEN 'Desenvolvimento'
+             WHEN ta.fase = 2 THEN 'Testes'
+             WHEN ta.fase = 3 THEN 'Retorno de testes'
+             WHEN ta.fase = 4 THEN 'Implantação' END AS fase_nome
 FROM tarefa t
 INNER JOIN projeto p ON p.id = t.id_projeto
 INNER JOIN tarefa_atribuicao ta ON ta.id_tarefa = t.id
 WHERE ta.conclusao < 100
+AND ( 
+        (ta.fase = 1 AND t.status IN (2,3))
+        OR
+        (ta.fase = 2 AND t.status IN (4,5))
+        OR 
+        (ta.fase = 3 AND t.status = 6)
+        OR 
+        (ta.fase = 4 AND t.status = 7)
+)
