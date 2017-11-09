@@ -5,3 +5,5 @@ UNION ALL
 (SELECT * FROM tarefas_retorno_teste_sem_atribuicao)
 UNION ALL
 (SELECT * FROM aguardando_implantacao_sem_atribuicao)
+UNION ALL
+(SELECT * FROM nunca_atribuidas)
