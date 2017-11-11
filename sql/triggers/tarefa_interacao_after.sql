@@ -42,7 +42,7 @@ BEGIN
 			ELSE
 				proximo_status:=3; -- em desenvolvimento
 			END IF;
-		WHEN 2, 3 THEN
+		WHEN 2 THEN
 			IF NEW.conclusao >= 100 THEN
 				SELECT COUNT(*) as total INTO intera FROM erro WHERE id_tarefa = NEW.id_tarefa AND corrigido = FALSE;
 				IF intera.total > 0 THEN
@@ -52,6 +52,10 @@ BEGIN
 				END IF;
 			ELSE
 				proximo_status:=5; -- em testes
+			END IF;
+		WHEN 3 THEN 
+			IF NEW.conclusao >= 100 THEN
+				proximo_status:=4;
 			END IF;
 		WHEN 4 THEN
 			IF NEW.conclusao >= 100 THEN

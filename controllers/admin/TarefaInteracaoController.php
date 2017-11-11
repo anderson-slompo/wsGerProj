@@ -11,7 +11,9 @@ use wsGerProj\Controllers\RestController,
     wsGerProj\Models\Tarefa,
     wsGerProj\Models\TarefaInteracao,
     wsGerProj\Models\Funcionario,
-    wsGerProj\Models\Departamento;
+    wsGerProj\Models\Departamento,
+    wsGerProj\Models\TarefaAtribuicao,
+    wsGerProj\Models\Erro;
 
 class TarefaInteracaoController extends ControllerBase implements RestController {
     public function index(){
@@ -43,7 +45,19 @@ class TarefaInteracaoController extends ControllerBase implements RestController
     public function createInteracaoFromJsonRawData(){
         
         $dataPost = $this->request->getJsonRawBody();
+        $user = $this->getDI()->get('currentUser');
         
+        if($dataPost->fase == TarefaAtribuicao::FASE_RETORNO_TESTES 
+            && isset($dataPost->fixed_errors)){
+                foreach((array)$dataPost->fixed_errors as $id => $status){
+                    if($status){
+                        $erro = Erro::findFirst($id);
+                        $erro->setCorrigido('t');
+                        $erro->setIdFuncionarioFix($user->funcionario_id);
+                        $erro->save();
+                    }
+                }
+            }
         $interacao = new TarefaInteracao();
         $interacao->setConclusao($dataPost->conclusao);
         $interacao->setDataHora(date('Y-m-d H:i:s'));

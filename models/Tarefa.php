@@ -296,7 +296,7 @@ class Tarefa extends \Phalcon\Mvc\Model {
         ];
         $query = Erro::query()
                 ->innerJoin('wsGerProj\Models\Funcionario', "fr.id = id_funcionario", 'fr')
-                ->leftJoin('wsGerProj\Models\Funcionario', "fr.id = id_funcionario_fix", 'ff')
+                ->leftJoin('wsGerProj\Models\Funcionario', "ff.id = id_funcionario_fix", 'ff')
                 ->columns($fields)
                 ->where('id_tarefa = :id_tarefa:')
                 ->bind(['id_tarefa' => $this->getId()]);

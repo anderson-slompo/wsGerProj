@@ -11,7 +11,8 @@ use wsGerProj\Controllers\RestController,
     wsGerProj\Models\Tarefa,
     wsGerProj\Models\TarefaAtribuicao,
     wsGerProj\Models\Funcionario,
-    wsGerProj\Models\Departamento;
+    wsGerProj\Models\Departamento,
+    wsGerProj\Models\Erro;
 
 class TarefaAtribuicaoController extends ControllerBase implements RestController {
 
@@ -88,6 +89,15 @@ class TarefaAtribuicaoController extends ControllerBase implements RestControlle
             $atribuicaoRet['tarefa'] = $atribuicao->getTarefa()->toArray();
             $atribuicaoRet['tarefa']['status_nome'] = Tarefa::$statusDesc[$atribuicaoRet['tarefa']['status']];
             
+            if($atribuicaoRet['tarefa']['status'] == Tarefa::STATUS_RETORNO_TESTE){
+                $erros = Erro::query()
+                                ->where("id_tarefa = :id_tarefa:")
+                                ->bind(['id_tarefa'=>$atribuicaoRet['id_tarefa']])
+                                ->execute()
+                                ->toArray();
+                $atribuicaoRet['erros'] = $erros;
+            }
+
             return $atribuicaoRet;
         } else {
             throw new \Exception("Atribuição #{$id} não encontrada", StatusCodes::NAO_ENCONTRADO);
