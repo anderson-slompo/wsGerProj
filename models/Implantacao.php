@@ -4,6 +4,7 @@ namespace wsGerProj\Models;
 
 use wsGerProj\Models\ImplantacaoTarefas;
 use wsGerProj\Models\Tarefa;
+use Phalcon\Mvc\Model\Validator\PresenceOf;
 
 
 class Implantacao extends \Phalcon\Mvc\Model
@@ -219,5 +220,26 @@ class Implantacao extends \Phalcon\Mvc\Model
                 ->where('id_implantacao = :id_implantacao:')
                 ->bind(['id_implantacao'=>$this->getId()]);
         return $query->execute();
+    }
+
+    public function validation(){
+        $this->validate(new PresenceOf([
+            "field" => "nome",
+            "message" => "O nome da imaplantação é obrigatório!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "descricao",
+            "message" => "A descricao da implantação é obrigatória!"
+        ]));
+        $this->validate(new PresenceOf([
+            "field" => "status",
+            "message" => "O status da implantação é obrigatório!"
+        ]));
+       
+        if (is_numeric($this->id)) {
+            $this->_operationMade=2;
+        }
+                
+        return !$this->validationHasFailed();
     }
 }

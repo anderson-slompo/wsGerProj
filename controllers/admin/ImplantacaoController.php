@@ -89,11 +89,32 @@ class ImplantacaoController extends ControllerBase implements RestController {
         
         $impl = new Implantacao();
         $impl->setNome($dataPost->nome);
-        $impl->setDescricao($dataPost->ddescricao);
+        $impl->setDescricao($dataPost->descricao);
         $impl->setStatus(Implantacao::STATUS_EM_ANDAMENTO);
         $impl->setDataHora(date('Y-m-d H:i:s'));
+
+        $impl->implantacaoTarefas = $this->createImplantacaoTarefas($impl, $dataPost);
         
+        if ($impl->validation() && $impl->save()) {
+            return $impl;
+        } else {
+            $this->db->rollback();
+            throw new \Exception(PostResponse::createModelErrorMessages($impl), StatusCodes::ERRO_CLI);
+        }
+
         return $impl;
     }
     
+    public function createImplantacaoTarefas(Implantacao $impl, $dataPost) {
+        $tarefas = [];
+        foreach ($dataPost->tarefas as $tarefa) {
+            $tar = new ImplantacaoTarefas();
+            $tar->setIdImplantacao($impl);;
+            $tar->setIdTarefa($tarefa->tarefa_id);
+
+            $tarefas[] = $tar;
+        }
+
+        return $tarefas;
+    }
 }
