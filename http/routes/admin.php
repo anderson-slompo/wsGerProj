@@ -156,6 +156,7 @@ $tarefaAtribuicao->get('/{id}', 'show');
 $tarefaAtribuicao->get('/tarefa/{id}', 'getTarefa');
 $tarefaAtribuicao->get('/atuais', 'getTarefasAtuais');
 $tarefaAtribuicao->get('/a_iniciar', 'getTarefasAIniciar');
+$tarefaAtribuicao->get('/disponiveis_implantacao', 'getTarefasDisponiveisImplantacao');
 // $tarefaAtribuicao->delete('/', 'delete');
 
 $app->mount($tarefaAtribuicao);
@@ -198,5 +199,18 @@ $dash->get('/tarefasAtrasadas', 'getTarefasAtrasadas');
 $dash->get('/tarefasExecussao', 'getTarefasExecussao');
 
 $app->mount($dash);
+
+/*******************************************************/
+
+$impl = new MicroCollection();
+
+$impl->setHandler(new A\ImplantacaoController());
+$impl->setPrefix('/admin/implantacao');
+$impl->post('/', 'create');
+$impl->get('/{id}', 'show');
+$impl->get('/', 'index');
+$impl->delete('/', 'delete');
+
+$app->mount($impl);
 
 /*******************************************************/

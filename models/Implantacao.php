@@ -2,6 +2,10 @@
 
 namespace wsGerProj\Models;
 
+use wsGerProj\Models\ImplantacaoTarefas;
+use wsGerProj\Models\Tarefa;
+
+
 class Implantacao extends \Phalcon\Mvc\Model
 {
 
@@ -34,6 +38,16 @@ class Implantacao extends \Phalcon\Mvc\Model
      * @var integer
      */
     protected $status;
+
+    const STATUS_EM_ANDAMENTO = 0;
+    const STATUS_FINALIZADA = 1;
+    const STATUS_CANCELADA = 2;
+
+    public static $status_desc = array(
+        self::STATUS_EM_ANDAMENTO => 'Em andamento',
+        self::STATUS_FINALIZADA => 'Finalizada',
+        self::STATUS_CANCELADA => 'Cancelada',
+    );
 
     /**
      * Method to set the value of field id
@@ -157,7 +171,6 @@ class Implantacao extends \Phalcon\Mvc\Model
     {
         $this->setSchema("public");
         $this->hasMany('id', 'wsGerProj\Models\ImplantacaoTarefas', 'id_implantacao', array('alias' => 'ImplantacaoTarefas'));
-        $this->hasMany('id', 'wsGerProj\Models\ImplantacaoTarefas', 'id_implantacao', NULL);
     }
 
     /**
@@ -192,4 +205,19 @@ class Implantacao extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public function getTarefas(){
+        $fields = [
+            'wsGerProj\Models\Tarefa.id',
+            'wsGerProj\Models\Tarefa.nome',
+            'wsGerProj\Models\Tarefa.descricao',
+            'p.nome as projeto_nome'
+        ];
+        $query = Tarefa::query()
+                ->columns($fields)
+                ->innerJoin('wsGerProj\Models\ImplantacaoTarefas', "it.id_tarefa = wsGerProj\Models\Tarefa.id", 'it')
+                ->innerJoin(' wsGerProj\Models\Projeto', 'p.id = id_projeto', 'p')
+                ->where('id_implantacao = :id_implantacao:')
+                ->bind(['id_implantacao'=>$this->getId()]);
+        return $query->execute();
+    }
 }

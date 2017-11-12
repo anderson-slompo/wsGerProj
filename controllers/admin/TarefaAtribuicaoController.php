@@ -55,6 +55,15 @@ class TarefaAtribuicaoController extends ControllerBase implements RestControlle
         return $ret;
     }
 
+    public function getTarefasDisponiveisImplantacao(){
+        $user = $this->getDI()->get('currentUser');
+        $ret = [];
+        $db = $this->getDi()->getShared('db');
+        $result = $db->query($this->makeQueryAtribuicaoDepartamento($user->funcionario_id, Departamento::IMPLANTACAO));
+        $ret = $this->fetchTarefas($result);
+        return $ret;
+    }
+
     private function fetchTarefas($result){
         $ret = [];
         $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
@@ -75,8 +84,15 @@ class TarefaAtribuicaoController extends ControllerBase implements RestControlle
                 FROM tarefas_atuais
                 WHERE id_funcionario = {$funcionario_id}
                 AND status IN( ? ) ";
+        if($departamento == Departamento::IMPLANTACAO){
+            $sql .= " AND NOT EXISTS(
+                        SELECT id_tarefa 
+                        FROM implantacao_tarefas 
+                        inner join implantacao i on i.id = id_implantacao and i.status IN(0,1) 
+                        WHERE id_tarefa = tarefa_id) ";
+        }
         $sql = str_replace('?', $this->getStatusDepartamento($departamento), $sql);
-        // die($sql);
+        
         return $sql;
     }
     
