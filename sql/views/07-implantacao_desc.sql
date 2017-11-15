@@ -7,7 +7,11 @@ SELECT i.id,
 	    i.status, 
 	    i.descricao, 
 	    f.nome as funcionario_nome,
-	    COUNT(it.id_tarefa) AS tot_tarefas
+	    COUNT(it.id_tarefa) AS tot_tarefas,
+	    CASE WHEN i.status = 0 THEN 'Em Andamento'
+	    	 WHEN i.status = 1 THEN 'Finalizada'
+	    	 WHEN i.status = 2 THEN 'Cancelada'
+	    END AS status_nome
 FROM implantacao i
 INNER JOIN funcionario f ON f.id = i.id_funcionario
 INNER JOIN implantacao_tarefas it ON it.id_implantacao = i.id

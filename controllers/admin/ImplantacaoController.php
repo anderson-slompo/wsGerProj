@@ -69,6 +69,24 @@ class ImplantacaoController extends ControllerBase implements RestController {
         throw new \Exception("Método não implementado.");
     }
 
+    public function finish($id) {
+        $impl = Implantacao::findFirst($id);
+        
+        if ($impl) {
+            if($impl->getStatus() <> Implantacao::STATUS_EM_ANDAMENTO){
+                throw new \Exception("Implantação #{$id} não está em andamento", StatusCodes::ERRO_CLI);
+            }
+            $impl->setStatus(Implantacao::STATUS_FINALIZADA);
+            if ($impl->validation() && $impl->save()) {
+                return PostResponse::createResponse(PostResponse::STATUS_OK, "Implantacao [#{$impl->getId()} {$impl->getNome()}] finalizada com sucesso.");
+            } else {
+                throw new \Exception(PostResponse::createModelErrorMessages($impl), StatusCodes::ERRO_CLI);
+            }
+        } else {
+            throw new \Exception("Implantação #{$id} não encontrada", StatusCodes::NAO_ENCONTRADO);
+        }
+    }
+
     public function delete($id) {
         $impl = Implantacao::findFirst($id);
 

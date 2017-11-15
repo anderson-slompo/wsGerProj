@@ -159,7 +159,7 @@ COMMENT ON COLUMN public.implantacao_tarefas.id_implantacao IS 'Identificador da
 
 
 CREATE TABLE public.tarefa_log (
-                id INTEGER NOT NULL,
+                id serial NOT NULL,
                 id_tarefa INTEGER NOT NULL,
                 data_hora TIMESTAMP NOT NULL,
                 dados_antes TEXT NOT NULL,
