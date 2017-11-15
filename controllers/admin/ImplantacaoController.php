@@ -10,29 +10,30 @@ use wsGerProj\Http\GetResponse;
 use wsGerProj\Http\DefaultParams;
 use wsGerProj\Http\PostResponse;
 use wsGerProj\Http\StatusCodes;
+use wsGerProj\Models\Funcionario;
 
 class ImplantacaoController extends ControllerBase implements RestController {
 
     public function index() {
-        $query = Implantacao::query();
+        $db = $this->getDi()->getShared('db');
+        
+        $sql = "SELECT * FROM implantacao_desc WHERE 1=1 ";        
 
         if ($this->request->getQuery('search_id')) {
-            $query->andWhere('id = :id:')->bind(['id' => $this->request->getQuery('search_id')]);
+            $sql.= " AND id = {$this->request->getQuery('search_id')} ";
         } else {
-            $binds = [];
             if ($this->request->getQuery('search_nome')) {
-                $query->andWhere('nome ILIKE :nome:');
-                $binds['nome'] = "%{$this->request->getQuery('search_nome')}%";
-            }
-            if (count($binds)) {
-                $query->bind($binds);
+                $sql.= " AND nome ILIKE '%{$this->request->getQuery('search_nome')}%' ";
             }
         }
         if ($this->request->getQuery(DefaultParams::ORDER)) {
-            $query->order($this->request->getQuery(DefaultParams::ORDER));
+            $sql .= " ORDER BY ".$this->request->getQuery(DefaultParams::ORDER);
         }
 
-        return GetResponse::createResponse($this->request, $query->execute()->toArray());
+        $result = $db->query($sql);
+        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
+
+        return GetResponse::createResponse($this->request, $result->fetchAll());
     }
 
     public function show($id) {
@@ -40,7 +41,12 @@ class ImplantacaoController extends ControllerBase implements RestController {
 
         if ($impl) {
             $implRet = $impl->toArray();
+            $func = Funcionario::findFirst($implRet['id_funcionario']);
+            $data_hora = \DateTime::createFromFormat('Y-m-d H:i:s', $implRet['data_hora']);
+            $implRet['data_hora'] =  $data_hora->format('d/m/Y H:i');
+            $implRet['status_nome'] = Implantacao::$status_desc[$implRet['status']];
             $implRet['tarefas'] = $impl->getTarefas()->toArray();
+            $implRet['funcionario_nome'] = $func->getNome();
 
             return $implRet;
         } else {
@@ -86,12 +92,14 @@ class ImplantacaoController extends ControllerBase implements RestController {
     private function createImplantacaoFromJsonRawData(){
         
         $dataPost = $this->request->getJsonRawBody();
+        $user = $this->getDI()->get('currentUser');
         
         $impl = new Implantacao();
         $impl->setNome($dataPost->nome);
         $impl->setDescricao($dataPost->descricao);
         $impl->setStatus(Implantacao::STATUS_EM_ANDAMENTO);
         $impl->setDataHora(date('Y-m-d H:i:s'));
+        $impl->setIdFuncionario($user->funcionario_id);
 
         $impl->implantacaoTarefas = $this->createImplantacaoTarefas($impl, $dataPost);
         

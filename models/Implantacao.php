@@ -40,6 +40,12 @@ class Implantacao extends \Phalcon\Mvc\Model
      */
     protected $status;
 
+    /**
+     *
+     * @var integer
+     */
+    protected $id_funcionario;
+
     const STATUS_EM_ANDAMENTO = 0;
     const STATUS_FINALIZADA = 1;
     const STATUS_CANCELADA = 2;
@@ -115,6 +121,13 @@ class Implantacao extends \Phalcon\Mvc\Model
         return $this;
     }
 
+    public function setIdFuncionario($id_funcionario)
+    {
+        $this->id_funcionario = $id_funcionario;
+
+        return $this;
+    }
+
     /**
      * Returns the value of field id
      *
@@ -165,6 +178,11 @@ class Implantacao extends \Phalcon\Mvc\Model
         return $this->status;
     }
 
+    public function getIdFuncionario()
+    {
+        return $this->id_funcionario;
+    }
+
     /**
      * Initialize method for model.
      */
@@ -172,6 +190,7 @@ class Implantacao extends \Phalcon\Mvc\Model
     {
         $this->setSchema("public");
         $this->hasMany('id', 'wsGerProj\Models\ImplantacaoTarefas', 'id_implantacao', array('alias' => 'ImplantacaoTarefas'));
+        $this->belongsTo('id_funcionario', 'wsGerProj\Models\Funcionario', 'id', array('foreignKey' => true,'alias' => 'Funcionario'));
     }
 
     /**
@@ -216,7 +235,7 @@ class Implantacao extends \Phalcon\Mvc\Model
         $query = Tarefa::query()
                 ->columns($fields)
                 ->innerJoin('wsGerProj\Models\ImplantacaoTarefas', "it.id_tarefa = wsGerProj\Models\Tarefa.id", 'it')
-                ->innerJoin(' wsGerProj\Models\Projeto', 'p.id = id_projeto', 'p')
+                ->innerJoin('wsGerProj\Models\Projeto', 'p.id = id_projeto', 'p')
                 ->where('id_implantacao = :id_implantacao:')
                 ->bind(['id_implantacao'=>$this->getId()]);
         return $query->execute();

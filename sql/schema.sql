@@ -27,7 +27,11 @@ CREATE TABLE public.implantacao (
                 nome VARCHAR(50) NOT NULL,
                 descricao TEXT NOT NULL,
                 status INTEGER NOT NULL,
-                CONSTRAINT implantacao_pk PRIMARY KEY (id)
+                id_funcionario integer NOT NULL,
+                CONSTRAINT implantacao_pk PRIMARY KEY (id),
+                CONSTRAINT implantacao_id_funcionario_fkey FOREIGN KEY (id_funcionario)
+                      REFERENCES funcionario (id) MATCH SIMPLE
+                      ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 COMMENT ON TABLE public.implantacao IS 'Armazena as implantações a serem executadas.';
 COMMENT ON COLUMN public.implantacao.id IS 'Identificador único gerado pelo sistema.';
