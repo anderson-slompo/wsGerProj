@@ -215,3 +215,12 @@ $impl->put('/finish/{id}', 'finish');
 $app->mount($impl);
 
 /*******************************************************/
+
+$gantt = new MicroCollection();
+
+$gantt->setHandler(new A\GanttController());
+$gantt->setPrefix('/admin/gantt');
+
+$gantt->get('/tarefasGantt', 'getTarefasGantt');
+
+$app->mount($gantt);
