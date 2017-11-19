@@ -209,6 +209,7 @@ $impl->setPrefix('/admin/implantacao');
 $impl->post('/', 'create');
 $impl->get('/{id}', 'show');
 $impl->get('/', 'index');
+$impl->get('/dash', 'getImplantacoesIniciadas');
 $impl->delete('/{id}', 'delete');
 $impl->put('/finish/{id}', 'finish');
 

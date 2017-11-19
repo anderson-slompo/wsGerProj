@@ -36,6 +36,17 @@ class ImplantacaoController extends ControllerBase implements RestController {
         return GetResponse::createResponse($this->request, $result->fetchAll());
     }
 
+    public function getImplantacoesIniciadas(){
+        $db = $this->getDi()->getShared('db');
+        $user = $this->getDI()->get('currentUser');
+
+        $sql = "SELECT * FROM implantacao_dash WHERE id_funcionario = {$user->funcionario_id} ";  
+        $result = $db->query($sql);
+        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
+
+        return $result->fetchAll();
+    }
+
     public function show($id) {
         $impl = Implantacao::findFirst($id);
 
