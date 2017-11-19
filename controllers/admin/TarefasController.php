@@ -54,7 +54,7 @@ class TarefasController extends ControllerBase implements RestController {
             }
             if ($this->request->getQuery('search_status')) {
                 $query->andWhere('status = :status:');
-                $binds['tipo'] = $this->request->getQuery('search_status');
+                $binds['status'] = $this->request->getQuery('search_status');
             }
             if ($this->request->getQuery('search_projeto')) {
                 $query->andWhere('id_projeto = :projeto:');
