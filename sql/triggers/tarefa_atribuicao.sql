@@ -1,3 +1,6 @@
+DROP TRIGGER IF EXISTS tarefa_atribuicao_trigger ON tarefa_atribuicao;
+DROP FUNCTION IF EXISTS tarefa_atribuicao();
+
 CREATE OR REPLACE FUNCTION tarefa_atribuicao()
   RETURNS trigger AS
 $BODY$
@@ -21,6 +24,10 @@ BEGIN
 -- 6 -> Retorno de testes
 -- 7 -> Aguardando Implantação
 -- 8 -> Implantada
+
+  IF NEW.data_inicio > NEW.data_termino THEN
+    RAISE EXCEPTION 'A data de início não pode ser superior à data final.';
+  END IF;
   
   SELECT * INTO tarefa FROM tarefa WHERE id = NEW.id_tarefa;
   IF tarefa.status = 4 AND NEW.fase = 1 THEN

@@ -224,3 +224,14 @@ $gantt->setPrefix('/admin/gantt');
 $gantt->get('/tarefasGantt', 'getTarefasGantt');
 
 $app->mount($gantt);
+
+/*******************************************************/
+
+$passwd = new MicroCollection();
+
+$passwd->setHandler(new A\PasswordController());
+$passwd->setPrefix('/admin/password');
+
+$passwd->post('/change', 'change');
+
+$app->mount($passwd);
