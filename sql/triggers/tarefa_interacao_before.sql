@@ -1,4 +1,4 @@
-DROP TRIGGER IF EXISTS tarefa_interacao_trigger_before ON tarefa_interacao;
+	DROP TRIGGER IF EXISTS tarefa_interacao_trigger_before ON tarefa_interacao;
 DROP FUNCTION IF EXISTS tarefa_interacao_before();
 
 CREATE FUNCTION tarefa_interacao_before()
