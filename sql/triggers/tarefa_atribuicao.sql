@@ -88,6 +88,13 @@ BEGIN
           END IF;
         END IF;
       END IF;
+      select count(distinct(id_tarefa)) as tot_implantacao, MIN(i.id) as id_implantacao INTO atrib
+      FROM implantacao_tarefas it 
+      INNER JOIN implantacao i ON i.id = it.id_implantacao AND i.status <> 2
+      WHERE it.id_tarefa = NEW.id_tarefa;
+      IF atrib.tot_implantacao > 0 THEN 
+        RAISE EXCEPTION 'A tarefa já está adicionada à uma implantação #%', atrib.id_implantacao;
+      END IF;
     ELSE
       RETURN NEW;
   END CASE;
